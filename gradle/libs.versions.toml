@@ -25,7 +25,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 
 # RTMP/WebRTC
-rtmpClient = "2.3.0"
+rtmpClient = "2.6.7"
 
 [libraries]
 # AndroidX Core
@@ -90,7 +90,7 @@ retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ver
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # RTMP Streaming
-rtmp-client = { group = "com.github.pedroSG94", name = "RootEncoder", version.ref = "rtmpClient" }
+rtmp-client = { group = "com.github.pedroSG94.RootEncoder", name = "library", version.ref = "rtmpClient" }
 
 # Logging
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
