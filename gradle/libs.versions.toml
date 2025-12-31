@@ -25,7 +25,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 
 # RTMP/WebRTC
-rtmpClient = "2.6.7"
+rtmpClient = "2.4.9"
 
 [libraries]
 # AndroidX Core
