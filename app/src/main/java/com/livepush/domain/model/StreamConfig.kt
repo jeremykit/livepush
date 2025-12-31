@@ -11,7 +11,7 @@ data class VideoConfig(
     val height: Int = 720,
     val fps: Int = 30,
     val bitrate: Int = 2_000_000,
-    val codec: String = "H.264",
+    val codec: VideoCodec = VideoCodec.H264,
     val keyFrameInterval: Int = 2
 )
 
@@ -19,7 +19,7 @@ data class AudioConfig(
     val sampleRate: Int = 44100,
     val channelCount: Int = 2,
     val bitrate: Int = 128_000,
-    val codec: String = "AAC"
+    val codec: AudioCodec = AudioCodec.AAC
 )
 
 enum class StreamProtocol {

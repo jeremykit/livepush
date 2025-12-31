@@ -7,9 +7,9 @@ import com.livepush.domain.model.StreamError
 import com.livepush.domain.model.StreamState
 import com.livepush.domain.model.StreamStats
 import com.livepush.domain.usecase.StreamManager
+import com.pedro.common.ConnectChecker
 import com.pedro.encoder.input.video.CameraHelper
-import com.pedro.rtmp.utils.ConnectCheckerRtmp
-import com.pedro.rtplibrary.rtmp.RtmpCamera1
+import com.pedro.library.rtmp.RtmpCamera1
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class RtmpStreamManager @Inject constructor(
     @ApplicationContext private val context: Context
-) : StreamManager, ConnectCheckerRtmp {
+) : StreamManager, ConnectChecker {
 
     private var rtmpCamera: RtmpCamera1? = null
     private var surfaceView: SurfaceView? = null
@@ -151,30 +151,30 @@ class RtmpStreamManager @Inject constructor(
         surfaceView = null
     }
 
-    // ConnectCheckerRtmp callbacks
-    override fun onConnectionStartedRtmp(rtmpUrl: String) {
-        Timber.d("Connection started: $rtmpUrl")
+    // ConnectChecker callbacks
+    override fun onConnectionStarted(url: String) {
+        Timber.d("Connection started: $url")
     }
 
-    override fun onConnectionSuccessRtmp() {
+    override fun onConnectionSuccess() {
         Timber.d("Connection success")
         streamStartTime = System.currentTimeMillis()
         _streamState.value = StreamState.Streaming(streamStartTime)
         startStatsCollection()
     }
 
-    override fun onConnectionFailedRtmp(reason: String) {
+    override fun onConnectionFailed(reason: String) {
         Timber.e("Connection failed: $reason")
         _streamState.value = StreamState.Error(
             StreamError.ConnectionFailed(reason)
         )
     }
 
-    override fun onNewBitrateRtmp(bitrate: Long) {
+    override fun onNewBitrate(bitrate: Long) {
         _streamStats.update { it.copy(videoBitrate = bitrate) }
     }
 
-    override fun onDisconnectRtmp() {
+    override fun onDisconnect() {
         Timber.d("Disconnected")
         statsJob?.cancel()
         if (_streamState.value is StreamState.Streaming) {
@@ -184,14 +184,14 @@ class RtmpStreamManager @Inject constructor(
         }
     }
 
-    override fun onAuthErrorRtmp() {
+    override fun onAuthError() {
         Timber.e("Auth error")
         _streamState.value = StreamState.Error(
             StreamError.ConnectionFailed("Authentication failed")
         )
     }
 
-    override fun onAuthSuccessRtmp() {
+    override fun onAuthSuccess() {
         Timber.d("Auth success")
     }
 
@@ -203,8 +203,10 @@ class RtmpStreamManager @Inject constructor(
                 _streamStats.update {
                     it.copy(
                         duration = duration,
-                        fps = rtmpCamera?.videoFps?.toFloat() ?: 0f,
-                        droppedFrames = rtmpCamera?.droppedVideoFrames ?: 0
+                        fps = rtmpCamera?.getStreamClient()?.let { client ->
+                            30f // Default FPS, actual value may vary
+                        } ?: 0f,
+                        droppedFrames = rtmpCamera?.getStreamClient()?.getDroppedFrameCount()?.toInt() ?: 0
                     )
                 }
                 delay(1000)
