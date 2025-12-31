@@ -1,5 +1,6 @@
 package com.livepush.presentation.ui.scanner
 
+import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.compose.animation.core.LinearEasing
@@ -74,7 +75,12 @@ fun ScannerScreen(
         uiState.scanResult?.let { result ->
             // 震动反馈
             context.getSystemService<Vibrator>()?.let { vibrator ->
-                vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                @Suppress("DEPRECATION")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                } else {
+                    vibrator.vibrate(50)
+                }
             }
             // 返回结果
             onScanResult(result)
