@@ -1,0 +1,80 @@
+package com.livepush.presentation.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.livepush.domain.model.AudioConfig
+import com.livepush.domain.model.StreamConfig
+import com.livepush.domain.model.VideoConfig
+import com.livepush.domain.repository.SettingsRepository
+import com.livepush.domain.repository.StreamHistoryRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+data class SettingsUiState(
+    val autoReconnect: Boolean = true,
+    val maxReconnectAttempts: Int = 5,
+    val connectionTimeout: Int = 10,
+    val hardwareEncoder: Boolean = true,
+    val noiseReduction: Boolean = true
+)
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val settingsRepository: SettingsRepository,
+    private val historyRepository: StreamHistoryRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(SettingsUiState())
+    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
+
+    val streamConfig: StateFlow<StreamConfig> = settingsRepository
+        .getStreamConfig()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = StreamConfig()
+        )
+
+    fun updateVideoConfig(videoConfig: VideoConfig) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(videoConfig = videoConfig)
+            )
+        }
+    }
+
+    fun updateAudioConfig(audioConfig: AudioConfig) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(audioConfig = audioConfig)
+            )
+        }
+    }
+
+    fun updateAutoReconnect(enabled: Boolean) {
+        _uiState.update { it.copy(autoReconnect = enabled) }
+    }
+
+    fun updateHardwareEncoder(enabled: Boolean) {
+        _uiState.update { it.copy(hardwareEncoder = enabled) }
+    }
+
+    fun updateNoiseReduction(enabled: Boolean) {
+        _uiState.update { it.copy(noiseReduction = enabled) }
+    }
+
+    fun clearHistory() {
+        viewModelScope.launch {
+            historyRepository.deleteAllHistory()
+        }
+    }
+}

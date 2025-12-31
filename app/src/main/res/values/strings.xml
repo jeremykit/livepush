@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LivePush</string>
+
+    <!-- Common -->
+    <string name="back">返回</string>
+    <string name="settings">设置</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="save">保存</string>
+    <string name="delete">删除</string>
+
+    <!-- Home Screen -->
+    <string name="stream_url">推流地址</string>
+    <string name="paste">粘贴</string>
+    <string name="scan_qr">扫码</string>
+    <string name="protocol">推流协议</string>
+    <string name="start_streaming">开始推流</string>
+    <string name="recent_history">最近使用</string>
+
+    <!-- Stream Screen -->
+    <string name="live">直播中</string>
+    <string name="switch_camera">切换</string>
+    <string name="flash">闪光</string>
+    <string name="mute">静音</string>
+    <string name="beauty">美颜</string>
+    <string name="stop">停止</string>
+    <string name="bitrate">码率</string>
+    <string name="fps">帧率</string>
+    <string name="latency">延迟</string>
+
+    <!-- Scanner Screen -->
+    <string name="scan_qr_code">扫描二维码</string>
+    <string name="scan_hint">将二维码放入框内，自动扫描</string>
+    <string name="flash_on">打开闪光灯</string>
+    <string name="flash_off">关闭闪光灯</string>
+    <string name="pick_from_gallery">从相册选择</string>
+
+    <!-- Settings Screen -->
+    <string name="video_settings">视频设置</string>
+    <string name="resolution">分辨率</string>
+    <string name="frame_rate">帧率</string>
+    <string name="video_bitrate">码率</string>
+    <string name="encoder">编码器</string>
+
+    <string name="audio_settings">音频设置</string>
+    <string name="sample_rate">采样率</string>
+    <string name="audio_bitrate">码率</string>
+    <string name="channels">声道</string>
+    <string name="stereo">立体声</string>
+    <string name="mono">单声道</string>
+
+    <string name="network_settings">网络设置</string>
+    <string name="auto_reconnect">自动重连</string>
+    <string name="max_reconnect_attempts">最大重连次数</string>
+    <string name="connection_timeout">连接超时</string>
+
+    <string name="advanced_settings">高级设置</string>
+    <string name="hardware_encoder">硬件编码</string>
+    <string name="noise_reduction">降噪</string>
+    <string name="keyframe_interval">关键帧间隔</string>
+
+    <string name="about">关于</string>
+    <string name="version">版本</string>
+    <string name="open_source_licenses">开源许可</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_name">推流服务</string>
+    <string name="notification_channel_description">显示推流状态</string>
+    <string name="notification_title">正在推流</string>
+    <string name="notification_text">点击返回应用</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_title">需要相机权限</string>
+    <string name="permission_camera_message">请授予相机权限以使用推流功能</string>
+    <string name="permission_microphone_title">需要麦克风权限</string>
+    <string name="permission_microphone_message">请授予麦克风权限以录制音频</string>
+    <string name="grant_permission">授予权限</string>
+    <string name="permission_rationale">您已拒绝权限请求，请在系统设置中手动开启</string>
+    <string name="permission_stream_title">需要相机和麦克风权限</string>
+    <string name="permission_stream_message">推流功能需要使用相机拍摄画面和麦克风录制声音</string>
+    <string name="permission_scanner_title">需要相机权限</string>
+    <string name="permission_scanner_message">扫描二维码需要使用相机</string>
+
+    <!-- Errors -->
+    <string name="error_connection_failed">连接失败</string>
+    <string name="error_connection_lost">连接已断开</string>
+    <string name="error_encoder_not_supported">编码器不支持</string>
+    <string name="error_camera_not_available">相机不可用</string>
+    <string name="error_network_unavailable">网络不可用</string>
+
+    <!-- Stream Screen -->
+    <string name="stop_stream_confirm">确定要停止推流吗？</string>
+    <string name="stream_error">推流错误</string>
+</resources>
