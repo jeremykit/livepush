@@ -20,7 +20,7 @@
 <!-- 添加应用截图 -->
 | 首页 | 推流 | 设置 |
 |:---:|:---:|:---:|
-| ![Home](docs/screenshots/home.png) | ![Stream](docs/screenshots/stream.png) | ![Settings](docs/screenshots/settings.png) |
+| ![Home](docs/screenshots/home.jpg) | ![Stream](docs/screenshots/stream.jpg) | ![Settings](docs/screenshots/settings.jpg) |
 
 ## 下载安装
 
