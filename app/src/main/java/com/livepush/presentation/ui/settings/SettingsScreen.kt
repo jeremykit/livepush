@@ -91,7 +91,7 @@ fun SettingsScreen(
             item {
                 SettingsItem(
                     title = stringResource(R.string.encoder),
-                    value = streamConfig.videoConfig.codec,
+                    value = streamConfig.videoConfig.codec.displayName,
                     onClick = { /* TODO: 显示编码器选择对话框 */ }
                 )
             }

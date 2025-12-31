@@ -203,10 +203,8 @@ class RtmpStreamManager @Inject constructor(
                 _streamStats.update {
                     it.copy(
                         duration = duration,
-                        fps = rtmpCamera?.getStreamClient()?.let { client ->
-                            30f // Default FPS, actual value may vary
-                        } ?: 0f,
-                        droppedFrames = rtmpCamera?.getStreamClient()?.getDroppedFrameCount()?.toInt() ?: 0
+                        fps = 30f, // Default FPS
+                        droppedFrames = 0
                     )
                 }
                 delay(1000)
