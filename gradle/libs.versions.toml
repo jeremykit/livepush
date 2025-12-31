@@ -90,7 +90,7 @@ retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ver
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # RTMP Streaming
-rtmp-client = { group = "com.github.pedroSG94.RootEncoder", name = "library", version.ref = "rtmpClient" }
+rtmp-client = { group = "com.github.pedroSG94", name = "RootEncoder", version.ref = "rtmpClient" }
 
 # Logging
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
