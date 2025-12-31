@@ -94,45 +94,80 @@ cd livepush
 ./gradlew lint
 ```
 
-## GitHub Actions 配置
+## GitHub Actions 自动构建与发布
 
-本项目使用 GitHub Actions 自动构建 APK。
+本项目使用 GitHub Actions 自动构建和发布 APK。
 
-### 自动触发
+### CI/CD 流程
 
-- **Push/PR 到 master**: 构建 Debug APK
-- **推送 Tag (v\*)**: 构建并签名 Release APK，自动发布到 Releases
+| 触发条件 | 执行操作 |
+|---------|---------|
+| Push/PR 到 main/master | 构建 Debug APK + Lint 检查 |
+| 推送 Tag (v*) | 构建签名 Release APK，自动发布到 Releases |
+| 手动触发 | 在 Actions 页面点击 `Run workflow` |
 
-### 配置签名密钥 (发布 Release 时需要)
+### 配置签名密钥（首次发布前需要）
 
-1. 生成签名密钥:
-   ```bash
-   keytool -genkey -v -keystore livepush.jks -keyalg RSA -keysize 2048 -validity 10000 -alias livepush
-   ```
+#### 步骤 1：生成签名密钥
 
-2. 将密钥转为 Base64:
-   ```bash
-   base64 -i livepush.jks -o livepush_base64.txt
-   ```
+```bash
+keytool -genkey -v -keystore livepush.jks -keyalg RSA -keysize 2048 -validity 10000 -alias livepush
+```
 
-3. 在 GitHub 仓库设置 Secrets (`Settings` → `Secrets and variables` → `Actions`):
+按提示输入密码和相关信息，**请牢记你设置的密码**。
 
-   | Secret 名称 | 说明 |
-   |------------|------|
-   | `SIGNING_KEY_BASE64` | 密钥文件的 Base64 内容 |
-   | `SIGNING_KEY_ALIAS` | 密钥别名 (如 `livepush`) |
-   | `SIGNING_KEY_PASSWORD` | 密钥密码 |
-   | `SIGNING_STORE_PASSWORD` | 密钥库密码 |
+#### 步骤 2：将密钥转为 Base64
 
-4. 发布新版本:
-   ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
+**Linux/macOS:**
+```bash
+base64 -i livepush.jks | pbcopy  # macOS，直接复制到剪贴板
+base64 -i livepush.jks           # Linux，输出到终端
+```
 
-### 手动触发构建
+**Windows PowerShell:**
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("livepush.jks")) | Set-Clipboard
+```
 
-在 GitHub 仓库的 Actions 页面，选择 `Android CI` workflow，点击 `Run workflow` 即可手动触发构建。
+#### 步骤 3：配置 GitHub Secrets
+
+1. 打开仓库设置：`Settings` → `Secrets and variables` → `Actions`
+2. 点击 `New repository secret`，添加以下 4 个 Secrets：
+
+| Secret 名称 | 值 |
+|------------|-----|
+| `SIGNING_KEY_BASE64` | 步骤 2 中获取的 Base64 字符串 |
+| `SIGNING_KEY_ALIAS` | 密钥别名，如 `livepush` |
+| `SIGNING_KEY_PASSWORD` | 创建密钥时设置的密钥密码 |
+| `SIGNING_STORE_PASSWORD` | 创建密钥时设置的密钥库密码 |
+
+### 发布新版本
+
+配置好 Secrets 后，发布新版本只需两条命令：
+
+```bash
+# 1. 创建版本标签
+git tag v1.0.0
+
+# 2. 推送标签到 GitHub
+git push origin v1.0.0
+```
+
+推送 Tag 后，GitHub Actions 会自动：
+1. 构建 Release APK
+2. 使用配置的密钥签名
+3. 创建 GitHub Release
+4. 上传签名后的 APK 到 Release 页面
+
+发布完成后，可在 [Releases](https://github.com/jeremykit/livepush/releases) 页面下载。
+
+### 版本号规范
+
+建议使用 [语义化版本](https://semver.org/lang/zh-CN/)：
+- `v1.0.0` - 首个正式版本
+- `v1.0.1` - Bug 修复
+- `v1.1.0` - 新功能
+- `v2.0.0` - 重大更新/不兼容变更
 
 ## 项目结构
 
