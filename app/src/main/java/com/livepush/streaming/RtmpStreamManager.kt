@@ -10,6 +10,7 @@ import com.livepush.domain.model.StreamState
 import com.livepush.domain.model.StreamStats
 import com.livepush.domain.usecase.StreamManager
 import com.livepush.streaming.encoder.AudioEncoderConfig
+import com.livepush.streaming.monitor.AudioHealthMonitor
 import com.pedro.common.ConnectChecker
 import com.pedro.encoder.input.audio.MicrophoneMode
 import com.pedro.encoder.input.video.CameraHelper
@@ -32,7 +33,8 @@ import javax.inject.Singleton
 
 @Singleton
 class RtmpStreamManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val audioHealthMonitor: AudioHealthMonitor
 ) : StreamManager, ConnectChecker {
 
     private var rtmpCamera: RtmpCamera1? = null
