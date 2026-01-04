@@ -67,7 +67,11 @@ class SettingsRepositoryImpl @Inject constructor(
                     bitrate = prefs[AUDIO_BITRATE] ?: 128_000,
                     codec = prefs[AUDIO_CODEC]?.let { AudioCodec.valueOf(it) } ?: AudioCodec.AAC
                 ),
-                protocol = prefs[STREAM_PROTOCOL]?.let { StreamProtocol.valueOf(it) } ?: StreamProtocol.RTMP
+                protocol = prefs[STREAM_PROTOCOL]?.let { StreamProtocol.valueOf(it) } ?: StreamProtocol.RTMP,
+                reconnectionConfig = ReconnectionConfig(
+                    maxRetries = prefs[RECONNECTION_MAX_RETRIES] ?: 5,
+                    initialDelayMs = prefs[RECONNECTION_INITIAL_DELAY_MS] ?: 2000
+                )
             )
         }
     }
