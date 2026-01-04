@@ -94,6 +94,10 @@ class SettingsRepositoryImpl @Inject constructor(
 
             // Protocol
             prefs[STREAM_PROTOCOL] = config.protocol.name
+
+            // Reconnection
+            prefs[RECONNECTION_MAX_RETRIES] = config.reconnectionConfig.maxRetries
+            prefs[RECONNECTION_INITIAL_DELAY_MS] = config.reconnectionConfig.initialDelayMs
         }
     }
 
@@ -104,6 +108,22 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun setLastStreamUrl(url: String) {
         dataStore.edit { prefs ->
             prefs[LAST_STREAM_URL] = url
+        }
+    }
+
+    override fun getReconnectionConfig(): Flow<ReconnectionConfig> {
+        return dataStore.data.map { prefs ->
+            ReconnectionConfig(
+                maxRetries = prefs[RECONNECTION_MAX_RETRIES] ?: 5,
+                initialDelayMs = prefs[RECONNECTION_INITIAL_DELAY_MS] ?: 2000
+            )
+        }
+    }
+
+    override suspend fun updateReconnectionConfig(config: ReconnectionConfig) {
+        dataStore.edit { prefs ->
+            prefs[RECONNECTION_MAX_RETRIES] = config.maxRetries
+            prefs[RECONNECTION_INITIAL_DELAY_MS] = config.initialDelayMs
         }
     }
 }
