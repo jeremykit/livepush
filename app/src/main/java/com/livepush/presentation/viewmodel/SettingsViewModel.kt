@@ -108,6 +108,39 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun updateSampleRate(sampleRate: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    audioConfig = currentConfig.audioConfig.copy(sampleRate = sampleRate)
+                )
+            )
+        }
+    }
+
+    fun updateAudioBitrate(bitrate: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    audioConfig = currentConfig.audioConfig.copy(bitrate = bitrate)
+                )
+            )
+        }
+    }
+
+    fun updateChannels(channels: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    audioConfig = currentConfig.audioConfig.copy(channels = channels)
+                )
+            )
+        }
+    }
+
     fun updateAutoReconnect(enabled: Boolean) {
         _uiState.update { it.copy(autoReconnect = enabled) }
     }
