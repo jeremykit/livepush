@@ -9,7 +9,10 @@ import com.livepush.domain.model.StreamError
 import com.livepush.domain.model.StreamState
 import com.livepush.domain.model.StreamStats
 import com.livepush.domain.usecase.StreamManager
+import com.livepush.streaming.capture.AudioCaptureConfig
+import com.livepush.streaming.capture.AudioCaptureManager
 import com.livepush.streaming.encoder.AudioEncoderConfig
+import com.livepush.streaming.encoder.BufferReleaseManager
 import com.livepush.streaming.monitor.AudioHealthMonitor
 import com.pedro.common.ConnectChecker
 import com.pedro.encoder.input.audio.MicrophoneMode
@@ -34,7 +37,9 @@ import javax.inject.Singleton
 @Singleton
 class RtmpStreamManager @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val audioHealthMonitor: AudioHealthMonitor
+    private val audioHealthMonitor: AudioHealthMonitor,
+    private val audioCaptureManager: AudioCaptureManager,
+    private val bufferReleaseManager: BufferReleaseManager
 ) : StreamManager, ConnectChecker {
 
     private var rtmpCamera: RtmpCamera1? = null
@@ -102,6 +107,14 @@ class RtmpStreamManager @Inject constructor(
             // Use SYNC mode for better audio/video synchronization in long sessions
             rtmpCamera?.setMicrophoneMode(MicrophoneMode.SYNC)
 
+            // Initialize AudioCaptureManager for monitoring (RootEncoder handles actual capture)
+            val audioCaptureConfig = AudioCaptureConfig(
+                sampleRate = audioEncoderConfig.sampleRate,
+                bitrate = audioEncoderConfig.bitrate,
+                isStereo = audioEncoderConfig.channelCount == 2
+            )
+            audioCaptureManager.initialize(audioCaptureConfig)
+
             rtmpCamera?.startPreview()
             _streamState.value = StreamState.Previewing
 
@@ -118,6 +131,7 @@ class RtmpStreamManager @Inject constructor(
     }
 
     override fun stopPreview() {
+        audioCaptureManager.release()
         rtmpCamera?.stopPreview()
         _streamState.value = StreamState.Idle
     }
@@ -131,6 +145,9 @@ class RtmpStreamManager @Inject constructor(
         _streamState.value = StreamState.Connecting
 
         try {
+            // Reset BufferReleaseManager for new streaming session
+            bufferReleaseManager.reset()
+
             rtmpCamera?.startStream(url)
             Timber.d("Starting stream to: $url")
         } catch (e: Exception) {
@@ -174,6 +191,11 @@ class RtmpStreamManager @Inject constructor(
 
     override fun release() {
         statsJob?.cancel()
+
+        // Release audio managers
+        audioCaptureManager.release()
+        bufferReleaseManager.release()
+
         rtmpCamera?.stopStream()
         rtmpCamera?.stopPreview()
         rtmpCamera = null
