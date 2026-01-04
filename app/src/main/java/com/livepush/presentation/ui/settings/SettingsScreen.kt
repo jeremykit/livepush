@@ -57,6 +57,9 @@ fun SettingsScreen(
     var showFrameRateDialog by remember { mutableStateOf(false) }
     var showBitrateDialog by remember { mutableStateOf(false) }
     var showEncoderDialog by remember { mutableStateOf(false) }
+    var showSampleRateDialog by remember { mutableStateOf(false) }
+    var showAudioBitrateDialog by remember { mutableStateOf(false) }
+    var showChannelsDialog by remember { mutableStateOf(false) }
 
     // Resolution selection dialog
     if (showResolutionDialog) {
@@ -103,6 +106,42 @@ fun SettingsScreen(
             onConfirm = { codec ->
                 viewModel.updateCodec(codec)
                 showEncoderDialog = false
+            }
+        )
+    }
+
+    // Sample rate selection dialog
+    if (showSampleRateDialog) {
+        SampleRateDialog(
+            currentSampleRate = streamConfig.audioConfig.sampleRate,
+            onDismiss = { showSampleRateDialog = false },
+            onConfirm = { sampleRate ->
+                viewModel.updateSampleRate(sampleRate)
+                showSampleRateDialog = false
+            }
+        )
+    }
+
+    // Audio bitrate selection dialog
+    if (showAudioBitrateDialog) {
+        AudioBitrateDialog(
+            currentBitrate = streamConfig.audioConfig.bitrate,
+            onDismiss = { showAudioBitrateDialog = false },
+            onConfirm = { bitrate ->
+                viewModel.updateAudioBitrate(bitrate)
+                showAudioBitrateDialog = false
+            }
+        )
+    }
+
+    // Channels selection dialog
+    if (showChannelsDialog) {
+        ChannelsDialog(
+            currentChannelCount = streamConfig.audioConfig.channelCount,
+            onDismiss = { showChannelsDialog = false },
+            onConfirm = { channels ->
+                viewModel.updateChannelCount(channels)
+                showChannelsDialog = false
             }
         )
     }
@@ -169,14 +208,14 @@ fun SettingsScreen(
                 SettingsItem(
                     title = stringResource(R.string.sample_rate),
                     value = "${streamConfig.audioConfig.sampleRate} Hz",
-                    onClick = { /* TODO: 显示采样率选择对话框 */ }
+                    onClick = { showSampleRateDialog = true }
                 )
             }
             item {
                 SettingsItem(
                     title = stringResource(R.string.audio_bitrate),
                     value = formatBitrate(streamConfig.audioConfig.bitrate),
-                    onClick = { /* TODO: 显示码率选择对话框 */ }
+                    onClick = { showAudioBitrateDialog = true }
                 )
             }
             item {
@@ -184,7 +223,7 @@ fun SettingsScreen(
                     title = stringResource(R.string.channels),
                     value = if (streamConfig.audioConfig.channelCount == 2)
                         stringResource(R.string.stereo) else stringResource(R.string.mono),
-                    onClick = { /* TODO: 显示声道选择对话框 */ }
+                    onClick = { showChannelsDialog = true }
                 )
             }
 
@@ -567,6 +606,185 @@ private fun EncoderDialog(
         confirmButton = {
             TextButton(
                 onClick = { onConfirm(selectedCodec) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun SampleRateDialog(
+    currentSampleRate: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val sampleRates = listOf(
+        22050 to "22050 Hz",
+        44100 to "44100 Hz",
+        48000 to "48000 Hz"
+    )
+
+    var selectedSampleRate by remember { mutableStateOf(currentSampleRate) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_sample_rate)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                sampleRates.forEach { (sampleRate, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (sampleRate == selectedSampleRate),
+                                onClick = { selectedSampleRate = sampleRate },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (sampleRate == selectedSampleRate),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedSampleRate) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun AudioBitrateDialog(
+    currentBitrate: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val bitrates = listOf(
+        64_000 to "64 Kbps",
+        96_000 to "96 Kbps",
+        128_000 to "128 Kbps",
+        192_000 to "192 Kbps",
+        256_000 to "256 Kbps",
+        320_000 to "320 Kbps"
+    )
+
+    var selectedBitrate by remember { mutableStateOf(currentBitrate) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_audio_bitrate)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                bitrates.forEach { (bitrate, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (bitrate == selectedBitrate),
+                                onClick = { selectedBitrate = bitrate },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (bitrate == selectedBitrate),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedBitrate) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun ChannelsDialog(
+    currentChannelCount: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val channels = listOf(
+        1 to stringResource(R.string.mono),
+        2 to stringResource(R.string.stereo)
+    )
+
+    var selectedChannelCount by remember { mutableStateOf(currentChannelCount) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_channels)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                channels.forEach { (count, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (count == selectedChannelCount),
+                                onClick = { selectedChannelCount = count },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (count == selectedChannelCount),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedChannelCount) }
             ) {
                 Text(stringResource(R.string.confirm))
             }
