@@ -41,6 +41,10 @@ class SettingsRepositoryImpl @Inject constructor(
         // Protocol
         val STREAM_PROTOCOL = stringPreferencesKey("stream_protocol")
 
+        // Network Settings
+        val MAX_RECONNECT_ATTEMPTS = intPreferencesKey("max_reconnect_attempts")
+        val CONNECTION_TIMEOUT = intPreferencesKey("connection_timeout")
+
         // Last URL
         val LAST_STREAM_URL = stringPreferencesKey("last_stream_url")
     }
