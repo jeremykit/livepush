@@ -108,6 +108,17 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun updateKeyframeInterval(interval: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(keyframeInterval = interval)
+                )
+            )
+        }
+    }
+
     fun updateSampleRate(sampleRate: Int) {
         viewModelScope.launch {
             val currentConfig = streamConfig.value
@@ -143,6 +154,14 @@ class SettingsViewModel @Inject constructor(
 
     fun updateAutoReconnect(enabled: Boolean) {
         _uiState.update { it.copy(autoReconnect = enabled) }
+    }
+
+    fun updateMaxReconnectAttempts(attempts: Int) {
+        _uiState.update { it.copy(maxReconnectAttempts = attempts) }
+    }
+
+    fun updateConnectionTimeout(timeout: Int) {
+        _uiState.update { it.copy(connectionTimeout = timeout) }
     }
 
     fun updateHardwareEncoder(enabled: Boolean) {
