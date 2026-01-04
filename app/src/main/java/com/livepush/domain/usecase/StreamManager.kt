@@ -20,6 +20,8 @@ interface StreamManager {
 
     fun stopStream()
 
+    fun cancelReconnection()
+
     fun switchCamera()
 
     fun enableTorch(enabled: Boolean)
