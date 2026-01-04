@@ -11,6 +11,14 @@
       "Edit(./**)",
       "Glob(./**)",
       "Grep(./**)",
+      "Read(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Write(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Edit(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Glob(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Grep(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Read(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability\\.auto-claude\\specs\\003-long-session-audio-stability/**)",
+      "Write(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability\\.auto-claude\\specs\\003-long-session-audio-stability/**)",
+      "Edit(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability\\.auto-claude\\specs\\003-long-session-audio-stability/**)",
       "Read(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection/**)",
       "Write(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection/**)",
       "Edit(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection/**)",
@@ -36,8 +44,7 @@
       "mcp__graphiti-memory__search_facts(*)",
       "mcp__graphiti-memory__add_episode(*)",
       "mcp__graphiti-memory__get_episodes(*)",
-      "mcp__graphiti-memory__get_entity_edge(*)"
-      "mcp__context7__get-library-docs(*)"
+      "mcp__graphiti-memory__get_entity_edge(*)"     
     ]
   }
 }

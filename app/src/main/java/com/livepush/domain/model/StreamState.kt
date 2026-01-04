@@ -34,3 +34,12 @@ data class StreamStats(
     val duration: Long = 0,
     val bytesSent: Long = 0
 )
+
+data class AudioHealthMetrics(
+    val audioLevel: Float = 0f,
+    val silenceDetected: Boolean = false,
+    val bufferUnderruns: Int = 0,
+    val sampleRate: Int = 44100,
+    val encodingLatency: Long = 0,
+    val timestamp: Long = System.currentTimeMillis()
+)
