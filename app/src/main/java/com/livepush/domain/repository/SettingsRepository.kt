@@ -8,4 +8,6 @@ interface SettingsRepository {
     suspend fun updateStreamConfig(config: StreamConfig)
     suspend fun getLastStreamUrl(): String?
     suspend fun setLastStreamUrl(url: String)
+    fun getStreamConfirmationEnabled(): Flow<Boolean>
+    suspend fun setStreamConfirmationEnabled(enabled: Boolean)
 }
