@@ -1,5 +1,6 @@
 package com.livepush.presentation.ui.stream
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -78,6 +79,15 @@ fun StreamScreen(
     // 设置推流地址
     LaunchedEffect(streamUrl) {
         viewModel.setStreamUrl(streamUrl)
+    }
+
+    // 处理系统返回按钮
+    BackHandler(enabled = true) {
+        if (isStreaming) {
+            showStopDialog = true
+        } else {
+            onNavigateBack()
+        }
     }
 
     // 停止确认对话框
