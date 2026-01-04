@@ -3,7 +3,8 @@ package com.livepush.domain.model
 data class StreamConfig(
     val videoConfig: VideoConfig = VideoConfig(),
     val audioConfig: AudioConfig = AudioConfig(),
-    val protocol: StreamProtocol = StreamProtocol.RTMP
+    val protocol: StreamProtocol = StreamProtocol.RTMP,
+    val reconnectionConfig: ReconnectionConfig = ReconnectionConfig()
 )
 
 data class VideoConfig(
@@ -20,6 +21,11 @@ data class AudioConfig(
     val channelCount: Int = 2,
     val bitrate: Int = 128_000,
     val codec: AudioCodec = AudioCodec.AAC
+)
+
+data class ReconnectionConfig(
+    val maxRetries: Int = 5,
+    val initialDelayMs: Int = 2000
 )
 
 enum class StreamProtocol {

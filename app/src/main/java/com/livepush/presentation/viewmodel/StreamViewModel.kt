@@ -109,6 +109,10 @@ class StreamViewModel @Inject constructor(
         streamManager.stopStream()
     }
 
+    fun cancelReconnection() {
+        streamManager.cancelReconnection()
+    }
+
     fun toggleMute() {
         val newMuted = !_uiState.value.isMuted
         _uiState.update { it.copy(isMuted = newMuted) }

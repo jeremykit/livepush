@@ -11,6 +11,14 @@
       "Edit(./**)",
       "Glob(./**)",
       "Grep(./**)",
+      "Read(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection/**)",
+      "Write(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection/**)",
+      "Edit(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection/**)",
+      "Glob(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection/**)",
+      "Grep(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection/**)",
+      "Read(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection\\.auto-claude\\specs\\002-automatic-network-reconnection/**)",
+      "Write(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection\\.auto-claude\\specs\\002-automatic-network-reconnection/**)",
+      "Edit(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection\\.auto-claude\\specs\\002-automatic-network-reconnection/**)",
       "Read(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs/**)",
       "Write(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs/**)",
       "Edit(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs/**)",
@@ -23,6 +31,12 @@
       "WebFetch(*)",
       "WebSearch(*)",
       "mcp__context7__resolve-library-id(*)",
+      "mcp__context7__get-library-docs(*)",
+      "mcp__graphiti-memory__search_nodes(*)",
+      "mcp__graphiti-memory__search_facts(*)",
+      "mcp__graphiti-memory__add_episode(*)",
+      "mcp__graphiti-memory__get_episodes(*)",
+      "mcp__graphiti-memory__get_entity_edge(*)"
       "mcp__context7__get-library-docs(*)"
     ]
   }

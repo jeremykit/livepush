@@ -6,7 +6,7 @@ sealed class StreamState {
     data object Previewing : StreamState()
     data object Connecting : StreamState()
     data class Streaming(val startTime: Long = System.currentTimeMillis()) : StreamState()
-    data object Reconnecting : StreamState()
+    data class Reconnecting(val attempt: Int, val maxAttempts: Int) : StreamState()
     data class Error(val error: StreamError) : StreamState()
 }
 
