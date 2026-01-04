@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "004-stream-confirmation-dialogs",
+  "state": "building",
+  "subtasks": {
+    "completed": 0,
+    "total": 8,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Preferences Infrastructure",
+    "id": null,
+    "total": 3
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 1,
+    "started_at": "2026-01-04T11:08:55.223741"
+  },
+  "last_update": "2026-01-04T11:10:50.739395"
+}
