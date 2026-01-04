@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.livepush.domain.model.AudioCodec
 import com.livepush.domain.model.AudioConfig
+import com.livepush.domain.model.ReconnectionConfig
 import com.livepush.domain.model.StreamConfig
 import com.livepush.domain.model.StreamProtocol
 import com.livepush.domain.model.VideoCodec
@@ -40,6 +41,10 @@ class SettingsRepositoryImpl @Inject constructor(
 
         // Protocol
         val STREAM_PROTOCOL = stringPreferencesKey("stream_protocol")
+
+        // Reconnection Settings
+        val RECONNECTION_MAX_RETRIES = intPreferencesKey("reconnection_max_retries")
+        val RECONNECTION_INITIAL_DELAY_MS = intPreferencesKey("reconnection_initial_delay_ms")
 
         // Last URL
         val LAST_STREAM_URL = stringPreferencesKey("last_stream_url")
