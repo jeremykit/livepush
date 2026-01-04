@@ -1026,3 +1026,106 @@ private fun KeyframeIntervalDialog(
         }
     )
 }
+
+@Composable
+private fun LicensesDialog(
+    onDismiss: () -> Unit
+) {
+    data class License(
+        val name: String,
+        val license: String,
+        val copyright: String
+    )
+
+    val licenses = listOf(
+        License(
+            name = "Android Jetpack Libraries",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "CameraX",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "Jetpack Compose",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "Material Design 3",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "Hilt",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "Kotlin",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) JetBrains s.r.o."
+        ),
+        License(
+            name = "Kotlin Coroutines",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) JetBrains s.r.o."
+        ),
+        License(
+            name = "OkHttp",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Square, Inc."
+        ),
+        License(
+            name = "Retrofit",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Square, Inc."
+        )
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.open_source_licenses)) },
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                licenses.forEach { license ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = license.name,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = license.copyright,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = license.license,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    if (license != licenses.last()) {
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.close))
+            }
+        }
+    )
+}
