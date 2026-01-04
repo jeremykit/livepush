@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.livepush.domain.model.AudioConfig
 import com.livepush.domain.model.StreamConfig
+import com.livepush.domain.model.VideoCodec
 import com.livepush.domain.model.VideoConfig
 import com.livepush.domain.repository.SettingsRepository
 import com.livepush.domain.repository.StreamHistoryRepository
@@ -49,6 +50,19 @@ class SettingsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = true
         )
+    init {
+        // Load network settings from DataStore
+        viewModelScope.launch {
+            val maxAttempts = settingsRepository.getMaxReconnectAttempts()
+            val timeout = settingsRepository.getConnectionTimeout()
+            _uiState.update {
+                it.copy(
+                    maxReconnectAttempts = maxAttempts,
+                    connectionTimeout = timeout
+                )
+            }
+        }
+    }
 
     fun updateVideoConfig(videoConfig: VideoConfig) {
         viewModelScope.launch {
@@ -71,11 +85,113 @@ class SettingsViewModel @Inject constructor(
     fun updateStreamConfirmationEnabled(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setStreamConfirmationEnabled(enabled)
+    fun updateResolution(width: Int, height: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(
+                        width = width,
+                        height = height
+                    )
+                )
+            )
+        }
+    }
+
+    fun updateFps(fps: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(fps = fps)
+                )
+            )
+        }
+    }
+
+    fun updateBitrate(bitrate: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(bitrate = bitrate)
+                )
+            )
+        }
+    }
+
+    fun updateCodec(codec: VideoCodec) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(codec = codec)
+                )
+            )
+        }
+    }
+
+    fun updateKeyFrameInterval(interval: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(keyFrameInterval = interval)
+                )
+            )
+        }
+    }
+
+    fun updateSampleRate(sampleRate: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    audioConfig = currentConfig.audioConfig.copy(sampleRate = sampleRate)
+                )
+            )
+        }
+    }
+
+    fun updateAudioBitrate(bitrate: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    audioConfig = currentConfig.audioConfig.copy(bitrate = bitrate)
+                )
+            )
+        }
+    }
+
+    fun updateChannels(channels: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    audioConfig = currentConfig.audioConfig.copy(channelCount = channels)
+                )
+            )
         }
     }
 
     fun updateAutoReconnect(enabled: Boolean) {
         _uiState.update { it.copy(autoReconnect = enabled) }
+    }
+
+    fun updateMaxReconnectAttempts(attempts: Int) {
+        viewModelScope.launch {
+            settingsRepository.setMaxReconnectAttempts(attempts)
+            _uiState.update { it.copy(maxReconnectAttempts = attempts) }
+        }
+    }
+
+    fun updateConnectionTimeout(timeout: Int) {
+        viewModelScope.launch {
+            settingsRepository.setConnectionTimeout(timeout)
+            _uiState.update { it.copy(connectionTimeout = timeout) }
+        }
     }
 
     fun updateHardwareEncoder(enabled: Boolean) {

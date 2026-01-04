@@ -6,7 +6,7 @@ sealed class StreamState {
     data object Previewing : StreamState()
     data object Connecting : StreamState()
     data class Streaming(val startTime: Long = System.currentTimeMillis()) : StreamState()
-    data object Reconnecting : StreamState()
+    data class Reconnecting(val attempt: Int, val maxAttempts: Int) : StreamState()
     data class Error(val error: StreamError) : StreamState()
 }
 
@@ -33,4 +33,13 @@ data class StreamStats(
     val rtt: Long = 0,
     val duration: Long = 0,
     val bytesSent: Long = 0
+)
+
+data class AudioHealthMetrics(
+    val audioLevel: Float = 0f,
+    val silenceDetected: Boolean = false,
+    val bufferUnderruns: Int = 0,
+    val sampleRate: Int = 44100,
+    val encodingLatency: Long = 0,
+    val timestamp: Long = System.currentTimeMillis()
 )

@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.livepush.domain.model.AudioCodec
 import com.livepush.domain.model.AudioConfig
+import com.livepush.domain.model.ReconnectionConfig
 import com.livepush.domain.model.StreamConfig
 import com.livepush.domain.model.StreamProtocol
 import com.livepush.domain.model.VideoCodec
@@ -42,6 +43,13 @@ class SettingsRepositoryImpl @Inject constructor(
         // Protocol
         val STREAM_PROTOCOL = stringPreferencesKey("stream_protocol")
 
+        // Reconnection Settings
+        val RECONNECTION_MAX_RETRIES = intPreferencesKey("reconnection_max_retries")
+        val RECONNECTION_INITIAL_DELAY_MS = intPreferencesKey("reconnection_initial_delay_ms")
+        // Network Settings
+        val MAX_RECONNECT_ATTEMPTS = intPreferencesKey("max_reconnect_attempts")
+        val CONNECTION_TIMEOUT = intPreferencesKey("connection_timeout")
+
         // Last URL
         val LAST_STREAM_URL = stringPreferencesKey("last_stream_url")
 
@@ -66,7 +74,11 @@ class SettingsRepositoryImpl @Inject constructor(
                     bitrate = prefs[AUDIO_BITRATE] ?: 128_000,
                     codec = prefs[AUDIO_CODEC]?.let { AudioCodec.valueOf(it) } ?: AudioCodec.AAC
                 ),
-                protocol = prefs[STREAM_PROTOCOL]?.let { StreamProtocol.valueOf(it) } ?: StreamProtocol.RTMP
+                protocol = prefs[STREAM_PROTOCOL]?.let { StreamProtocol.valueOf(it) } ?: StreamProtocol.RTMP,
+                reconnectionConfig = ReconnectionConfig(
+                    maxRetries = prefs[RECONNECTION_MAX_RETRIES] ?: 5,
+                    initialDelayMs = prefs[RECONNECTION_INITIAL_DELAY_MS] ?: 2000
+                )
             )
         }
     }
@@ -89,6 +101,10 @@ class SettingsRepositoryImpl @Inject constructor(
 
             // Protocol
             prefs[STREAM_PROTOCOL] = config.protocol.name
+
+            // Reconnection
+            prefs[RECONNECTION_MAX_RETRIES] = config.reconnectionConfig.maxRetries
+            prefs[RECONNECTION_INITIAL_DELAY_MS] = config.reconnectionConfig.initialDelayMs
         }
     }
 
@@ -113,4 +129,41 @@ class SettingsRepositoryImpl @Inject constructor(
             prefs[STREAM_CONFIRMATION_ENABLED] = enabled
         }
     }
+    
+    override fun getReconnectionConfig(): Flow<ReconnectionConfig> {
+        return dataStore.data.map { prefs ->
+            ReconnectionConfig(
+                maxRetries = prefs[RECONNECTION_MAX_RETRIES] ?: 5,
+                initialDelayMs = prefs[RECONNECTION_INITIAL_DELAY_MS] ?: 2000
+            )
+        }
+    }
+
+    override suspend fun updateReconnectionConfig(config: ReconnectionConfig) {
+        dataStore.edit { prefs ->
+            prefs[RECONNECTION_MAX_RETRIES] = config.maxRetries
+            prefs[RECONNECTION_INITIAL_DELAY_MS] = config.initialDelayMs
+          }
+     }
+    
+    override suspend fun getMaxReconnectAttempts(): Int {
+        return dataStore.data.first()[MAX_RECONNECT_ATTEMPTS] ?: 5
+    }
+
+    override suspend fun setMaxReconnectAttempts(attempts: Int) {
+        dataStore.edit { prefs ->
+            prefs[MAX_RECONNECT_ATTEMPTS] = attempts
+        }
+    }
+
+    override suspend fun getConnectionTimeout(): Int {
+        return dataStore.data.first()[CONNECTION_TIMEOUT] ?: 10
+    }
+
+    override suspend fun setConnectionTimeout(timeout: Int) {
+        dataStore.edit { prefs ->
+            prefs[CONNECTION_TIMEOUT] = timeout
+        }
+    }
+   
 }

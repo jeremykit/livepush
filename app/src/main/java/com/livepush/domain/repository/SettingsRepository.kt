@@ -1,5 +1,6 @@
 package com.livepush.domain.repository
 
+import com.livepush.domain.model.ReconnectionConfig
 import com.livepush.domain.model.StreamConfig
 import kotlinx.coroutines.flow.Flow
 
@@ -10,4 +11,12 @@ interface SettingsRepository {
     suspend fun setLastStreamUrl(url: String)
     fun getStreamConfirmationEnabled(): Flow<Boolean>
     suspend fun setStreamConfirmationEnabled(enabled: Boolean)
+    fun getReconnectionConfig(): Flow<ReconnectionConfig>
+    suspend fun updateReconnectionConfig(config: ReconnectionConfig)
+
+    // Network settings
+    suspend fun getMaxReconnectAttempts(): Int
+    suspend fun setMaxReconnectAttempts(attempts: Int)
+    suspend fun getConnectionTimeout(): Int
+    suspend fun setConnectionTimeout(timeout: Int)
 }

@@ -42,6 +42,10 @@
     <string name="frame_rate">帧率</string>
     <string name="video_bitrate">码率</string>
     <string name="encoder">编码器</string>
+    <string name="select_resolution">选择分辨率</string>
+    <string name="select_frame_rate">选择帧率</string>
+    <string name="select_bitrate">选择码率</string>
+    <string name="select_encoder">选择编码器</string>
 
     <string name="audio_settings">音频设置</string>
     <string name="sample_rate">采样率</string>
@@ -49,16 +53,25 @@
     <string name="channels">声道</string>
     <string name="stereo">立体声</string>
     <string name="mono">单声道</string>
+    <string name="select_sample_rate">选择采样率</string>
+    <string name="select_audio_bitrate">选择音频码率</string>
+    <string name="select_channels">选择声道</string>
 
     <string name="network_settings">网络设置</string>
     <string name="auto_reconnect">自动重连</string>
     <string name="max_reconnect_attempts">最大重连次数</string>
     <string name="connection_timeout">连接超时</string>
+    <string name="select_reconnect_attempts">选择最大重连次数</string>
+    <string name="select_connection_timeout">选择连接超时</string>
+    <string name="reconnect_attempts_format">%d 次</string>
+    <string name="connection_timeout_format">%d 秒</string>
+    <string name="unlimited">无限制</string>
 
     <string name="advanced_settings">高级设置</string>
     <string name="hardware_encoder">硬件编码</string>
     <string name="noise_reduction">降噪</string>
     <string name="keyframe_interval">关键帧间隔</string>
+    <string name="select_keyframe_interval">选择关键帧间隔</string>
 
     <string name="about">关于</string>
     <string name="version">版本</string>
@@ -118,4 +131,6 @@
     <string name="confirm_camera_switch_summary">切换摄像头前显示确认对话框</string>
     <string name="confirm_delete_history">删除历史时确认</string>
     <string name="confirm_delete_history_summary">删除历史记录前显示确认对话框</string>
+    <string name="reconnecting">正在重连...</string>
+    <string name="reconnect_attempt">尝试 %1$d/%2$d</string>
 </resources>
