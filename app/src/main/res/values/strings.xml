@@ -53,6 +53,9 @@
     <string name="channels">声道</string>
     <string name="stereo">立体声</string>
     <string name="mono">单声道</string>
+    <string name="select_sample_rate">选择采样率</string>
+    <string name="select_audio_bitrate">选择音频码率</string>
+    <string name="select_channels">选择声道</string>
 
     <string name="network_settings">网络设置</string>
     <string name="auto_reconnect">自动重连</string>
@@ -68,6 +71,7 @@
     <string name="hardware_encoder">硬件编码</string>
     <string name="noise_reduction">降噪</string>
     <string name="keyframe_interval">关键帧间隔</string>
+    <string name="select_keyframe_interval">选择关键帧间隔</string>
 
     <string name="about">关于</string>
     <string name="version">版本</string>

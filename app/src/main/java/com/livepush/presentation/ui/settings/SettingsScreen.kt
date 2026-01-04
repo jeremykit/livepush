@@ -1124,7 +1124,7 @@ private fun LicensesDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.close))
+                Text(stringResource(R.string.confirm))
             }
         }
     )
