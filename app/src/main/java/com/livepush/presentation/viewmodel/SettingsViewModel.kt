@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.livepush.domain.model.AudioConfig
 import com.livepush.domain.model.StreamConfig
+import com.livepush.domain.model.VideoCodec
 import com.livepush.domain.model.VideoConfig
 import com.livepush.domain.repository.SettingsRepository
 import com.livepush.domain.repository.StreamHistoryRepository
@@ -56,6 +57,53 @@ class SettingsViewModel @Inject constructor(
             val currentConfig = streamConfig.value
             settingsRepository.updateStreamConfig(
                 currentConfig.copy(audioConfig = audioConfig)
+            )
+        }
+    }
+
+    fun updateResolution(width: Int, height: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(
+                        width = width,
+                        height = height
+                    )
+                )
+            )
+        }
+    }
+
+    fun updateFps(fps: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(fps = fps)
+                )
+            )
+        }
+    }
+
+    fun updateBitrate(bitrate: Int) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(bitrate = bitrate)
+                )
+            )
+        }
+    }
+
+    fun updateCodec(codec: VideoCodec) {
+        viewModelScope.launch {
+            val currentConfig = streamConfig.value
+            settingsRepository.updateStreamConfig(
+                currentConfig.copy(
+                    videoConfig = currentConfig.videoConfig.copy(codec = codec)
+                )
             )
         }
     }

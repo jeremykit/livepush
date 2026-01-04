@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "001-complete-settings-dialogs",
+  "state": "building",
+  "subtasks": {
+    "completed": 1,
+    "total": 10,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "ViewModel Layer",
+    "id": null,
+    "total": 3
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 1,
+    "started_at": "2026-01-04T10:34:26.184736"
+  },
+  "last_update": "2026-01-04T10:34:26.230321"
+}
