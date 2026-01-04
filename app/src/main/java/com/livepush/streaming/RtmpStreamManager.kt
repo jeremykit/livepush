@@ -54,7 +54,10 @@ class RtmpStreamManager @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var statsJob: Job? = null
+    private var reconnectionJob: Job? = null
     private var streamStartTime: Long = 0L
+    private var streamUrl: String? = null
+    private var reconnectionAttempt: Int = 0
 
     override val isFrontCamera: Boolean
         get() = rtmpCamera?.cameraFacing == CameraHelper.Facing.FRONT
@@ -142,6 +145,7 @@ class RtmpStreamManager @Inject constructor(
             return
         }
 
+        streamUrl = url
         _streamState.value = StreamState.Connecting
 
         try {
@@ -159,11 +163,14 @@ class RtmpStreamManager @Inject constructor(
     }
 
     override fun stopStream() {
+        reconnectionJob?.cancel()
         statsJob?.cancel()
         audioHealthMonitor.stopMonitoring()
         rtmpCamera?.stopStream()
         _streamState.value = StreamState.Previewing
         _streamStats.value = StreamStats()
+        streamUrl = null
+        reconnectionAttempt = 0
     }
 
     override fun switchCamera() {
@@ -191,6 +198,7 @@ class RtmpStreamManager @Inject constructor(
     }
 
     override fun release() {
+        reconnectionJob?.cancel()
         statsJob?.cancel()
 
         // Release audio managers
@@ -202,6 +210,15 @@ class RtmpStreamManager @Inject constructor(
         rtmpCamera?.stopPreview()
         rtmpCamera = null
         surfaceView = null
+        streamUrl = null
+        reconnectionAttempt = 0
+    }
+
+    override fun cancelReconnection() {
+        reconnectionJob?.cancel()
+        reconnectionAttempt = 0
+        _streamState.value = StreamState.Previewing
+        Timber.d("Reconnection cancelled by user")
     }
 
     // ConnectChecker callbacks
@@ -211,6 +228,8 @@ class RtmpStreamManager @Inject constructor(
 
     override fun onConnectionSuccess() {
         Timber.d("Connection success")
+        reconnectionJob?.cancel()
+        reconnectionAttempt = 0
         streamStartTime = System.currentTimeMillis()
         _streamState.value = StreamState.Streaming(streamStartTime)
         audioHealthMonitor.startMonitoring()
@@ -235,6 +254,7 @@ class RtmpStreamManager @Inject constructor(
             _streamState.value = StreamState.Error(
                 StreamError.ConnectionLost("Connection lost")
             )
+            startReconnection()
         }
     }
 
@@ -264,5 +284,56 @@ class RtmpStreamManager @Inject constructor(
                 delay(1000)
             }
         }
+    }
+
+    private fun startReconnection() {
+        val url = streamUrl
+        if (url == null) {
+            Timber.e("Cannot reconnect: stream URL is null")
+            return
+        }
+
+        reconnectionJob?.cancel()
+        reconnectionJob = scope.launch {
+            while (isActive && reconnectionAttempt < currentConfig.reconnectionConfig.maxRetries) {
+                reconnectionAttempt++
+                val delaySeconds = calculateBackoffDelay(reconnectionAttempt)
+
+                Timber.d("Reconnection attempt $reconnectionAttempt/${currentConfig.reconnectionConfig.maxRetries} in ${delaySeconds}s")
+                _streamState.value = StreamState.Reconnecting(reconnectionAttempt, currentConfig.reconnectionConfig.maxRetries)
+
+                delay(delaySeconds * 1000L)
+
+                if (!isActive) break
+
+                Timber.d("Attempting to reconnect to: $url")
+                _streamState.value = StreamState.Connecting
+
+                try {
+                    rtmpCamera?.stopStream()
+                    delay(500) // Brief pause before reconnecting
+                    rtmpCamera?.startStream(url)
+                } catch (e: Exception) {
+                    Timber.e(e, "Reconnection attempt failed")
+                    if (reconnectionAttempt >= currentConfig.reconnectionConfig.maxRetries) {
+                        _streamState.value = StreamState.Error(
+                            StreamError.ConnectionFailed("Max reconnection attempts reached")
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun calculateBackoffDelay(attempt: Int): Int {
+        // Exponential backoff: 2s, 4s, 8s, 16s, 30s (max)
+        val delay = minOf(BASE_RECONNECTION_DELAY * (1 shl (attempt - 1)), MAX_RECONNECTION_DELAY)
+        return delay
+    }
+
+    companion object {
+        private const val BASE_RECONNECTION_DELAY = 2 // seconds
+        private const val MAX_RECONNECTION_DELAY = 30 // seconds
+        private const val MAX_RECONNECTION_ATTEMPTS = 10
     }
 }
