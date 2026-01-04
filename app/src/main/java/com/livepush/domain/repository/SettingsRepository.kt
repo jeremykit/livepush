@@ -1,5 +1,6 @@
 package com.livepush.domain.repository
 
+import com.livepush.domain.model.ReconnectionConfig
 import com.livepush.domain.model.StreamConfig
 import kotlinx.coroutines.flow.Flow
 
@@ -8,4 +9,6 @@ interface SettingsRepository {
     suspend fun updateStreamConfig(config: StreamConfig)
     suspend fun getLastStreamUrl(): String?
     suspend fun setLastStreamUrl(url: String)
+    fun getReconnectionConfig(): Flow<ReconnectionConfig>
+    suspend fun updateReconnectionConfig(config: ReconnectionConfig)
 }
