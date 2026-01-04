@@ -1,0 +1,34 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Read(./**)",
+      "Write(./**)",
+      "Edit(./**)",
+      "Glob(./**)",
+      "Grep(./**)",
+      "Read(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Write(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Edit(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Glob(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Grep(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability/**)",
+      "Read(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability\\.auto-claude\\specs\\003-long-session-audio-stability/**)",
+      "Write(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability\\.auto-claude\\specs\\003-long-session-audio-stability/**)",
+      "Edit(E:\\237\\live\\livepush\\.worktrees\\003-long-session-audio-stability\\.auto-claude\\specs\\003-long-session-audio-stability/**)",
+      "Bash(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "mcp__context7__resolve-library-id(*)",
+      "mcp__context7__get-library-docs(*)",
+      "mcp__graphiti-memory__search_nodes(*)",
+      "mcp__graphiti-memory__search_facts(*)",
+      "mcp__graphiti-memory__add_episode(*)",
+      "mcp__graphiti-memory__get_episodes(*)",
+      "mcp__graphiti-memory__get_entity_edge(*)"
+    ]
+  }
+}
