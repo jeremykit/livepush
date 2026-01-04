@@ -9,27 +9,38 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.livepush.R
+import com.livepush.domain.model.VideoCodec
 import com.livepush.presentation.viewmodel.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +52,60 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val streamConfig by viewModel.streamConfig.collectAsStateWithLifecycle()
+
+    var showResolutionDialog by remember { mutableStateOf(false) }
+    var showFrameRateDialog by remember { mutableStateOf(false) }
+    var showBitrateDialog by remember { mutableStateOf(false) }
+    var showEncoderDialog by remember { mutableStateOf(false) }
+
+    // Resolution selection dialog
+    if (showResolutionDialog) {
+        ResolutionDialog(
+            currentWidth = streamConfig.videoConfig.width,
+            currentHeight = streamConfig.videoConfig.height,
+            onDismiss = { showResolutionDialog = false },
+            onConfirm = { width, height ->
+                viewModel.updateResolution(width, height)
+                showResolutionDialog = false
+            }
+        )
+    }
+
+    // Frame rate selection dialog
+    if (showFrameRateDialog) {
+        FrameRateDialog(
+            currentFps = streamConfig.videoConfig.fps,
+            onDismiss = { showFrameRateDialog = false },
+            onConfirm = { fps ->
+                viewModel.updateFps(fps)
+                showFrameRateDialog = false
+            }
+        )
+    }
+
+    // Bitrate selection dialog
+    if (showBitrateDialog) {
+        BitrateDialog(
+            currentBitrate = streamConfig.videoConfig.bitrate,
+            onDismiss = { showBitrateDialog = false },
+            onConfirm = { bitrate ->
+                viewModel.updateBitrate(bitrate)
+                showBitrateDialog = false
+            }
+        )
+    }
+
+    // Encoder selection dialog
+    if (showEncoderDialog) {
+        EncoderDialog(
+            currentCodec = streamConfig.videoConfig.codec,
+            onDismiss = { showEncoderDialog = false },
+            onConfirm = { codec ->
+                viewModel.updateCodec(codec)
+                showEncoderDialog = false
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -71,28 +136,28 @@ fun SettingsScreen(
                 SettingsItem(
                     title = stringResource(R.string.resolution),
                     value = "${streamConfig.videoConfig.width} × ${streamConfig.videoConfig.height}",
-                    onClick = { /* TODO: 显示分辨率选择对话框 */ }
+                    onClick = { showResolutionDialog = true }
                 )
             }
             item {
                 SettingsItem(
                     title = stringResource(R.string.frame_rate),
                     value = "${streamConfig.videoConfig.fps} fps",
-                    onClick = { /* TODO: 显示帧率选择对话框 */ }
+                    onClick = { showFrameRateDialog = true }
                 )
             }
             item {
                 SettingsItem(
                     title = stringResource(R.string.video_bitrate),
                     value = formatBitrate(streamConfig.videoConfig.bitrate),
-                    onClick = { /* TODO: 显示码率选择对话框 */ }
+                    onClick = { showBitrateDialog = true }
                 )
             }
             item {
                 SettingsItem(
                     title = stringResource(R.string.encoder),
                     value = streamConfig.videoConfig.codec.displayName,
-                    onClick = { /* TODO: 显示编码器选择对话框 */ }
+                    onClick = { showEncoderDialog = true }
                 )
             }
 
@@ -269,5 +334,247 @@ private fun SettingsSwitchItem(
             )
         },
         modifier = modifier
+    )
+}
+
+@Composable
+private fun ResolutionDialog(
+    currentWidth: Int,
+    currentHeight: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int, Int) -> Unit
+) {
+    val resolutions = listOf(
+        Pair(640, 360) to "640 × 360 (360p)",
+        Pair(854, 480) to "854 × 480 (480p)",
+        Pair(1280, 720) to "1280 × 720 (720p)",
+        Pair(1920, 1080) to "1920 × 1080 (1080p)"
+    )
+
+    var selectedResolution by remember {
+        mutableStateOf(Pair(currentWidth, currentHeight))
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_resolution)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                resolutions.forEach { (resolution, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (resolution == selectedResolution),
+                                onClick = { selectedResolution = resolution },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (resolution == selectedResolution),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirm(selectedResolution.first, selectedResolution.second)
+                }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun FrameRateDialog(
+    currentFps: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val frameRates = listOf(
+        15 to "15 fps",
+        24 to "24 fps",
+        30 to "30 fps",
+        60 to "60 fps"
+    )
+
+    var selectedFps by remember { mutableStateOf(currentFps) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_frame_rate)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                frameRates.forEach { (fps, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (fps == selectedFps),
+                                onClick = { selectedFps = fps },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (fps == selectedFps),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedFps) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun BitrateDialog(
+    currentBitrate: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val bitrates = listOf(
+        500_000 to "500 Kbps",
+        1_000_000 to "1 Mbps",
+        2_000_000 to "2 Mbps",
+        4_000_000 to "4 Mbps",
+        6_000_000 to "6 Mbps",
+        8_000_000 to "8 Mbps"
+    )
+
+    var selectedBitrate by remember { mutableStateOf(currentBitrate) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_bitrate)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                bitrates.forEach { (bitrate, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (bitrate == selectedBitrate),
+                                onClick = { selectedBitrate = bitrate },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (bitrate == selectedBitrate),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedBitrate) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun EncoderDialog(
+    currentCodec: VideoCodec,
+    onDismiss: () -> Unit,
+    onConfirm: (VideoCodec) -> Unit
+) {
+    val codecs = VideoCodec.entries
+
+    var selectedCodec by remember { mutableStateOf(currentCodec) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_encoder)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                codecs.forEach { codec ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (codec == selectedCodec),
+                                onClick = { selectedCodec = codec },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (codec == selectedCodec),
+                            onClick = null
+                        )
+                        Text(
+                            text = codec.displayName,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedCodec) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
     )
 }
