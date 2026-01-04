@@ -11,6 +11,8 @@ interface SettingsRepository {
     suspend fun setLastStreamUrl(url: String)
     fun getReconnectionConfig(): Flow<ReconnectionConfig>
     suspend fun updateReconnectionConfig(config: ReconnectionConfig)
+    fun getStreamConfirmationEnabled(): Flow<Boolean>
+    suspend fun setStreamConfirmationEnabled(enabled: Boolean)
 
     // Network settings
     suspend fun getMaxReconnectAttempts(): Int

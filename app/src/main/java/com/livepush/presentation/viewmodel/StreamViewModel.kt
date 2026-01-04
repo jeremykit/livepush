@@ -29,7 +29,8 @@ data class StreamUiState(
     val showBeautyPanel: Boolean = false,
     val duration: Long = 0L,
     val formattedDuration: String = "00:00:00",
-    val streamUrl: String = ""
+    val streamUrl: String = "",
+    val showNavigationDialog: Boolean = false
 )
 
 @HiltViewModel
@@ -54,6 +55,14 @@ class StreamViewModel @Inject constructor(
             initialValue = StreamConfig()
         )
 
+    val streamConfirmationEnabled: StateFlow<Boolean> = settingsRepository
+        .getStreamConfirmationEnabled()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = true
+        )
+
     private var durationJob: Job? = null
     private var streamStartTime: Long = 0L
     private var currentSurfaceView: SurfaceView? = null
@@ -69,7 +78,11 @@ class StreamViewModel @Inject constructor(
                     }
                     is StreamState.Previewing, is StreamState.Idle -> {
                         durationJob?.cancel()
-                        _uiState.update { it.copy(duration = 0L, formattedDuration = "00:00:00") }
+                        _uiState.update { it.copy(duration = 0L, formattedDuration = "00:00:00", showNavigationDialog = false) }
+                    }
+                    is StreamState.Error -> {
+                        // Dismiss navigation dialog if stream fails
+                        _uiState.update { it.copy(showNavigationDialog = false) }
                     }
                     else -> {}
                 }
@@ -155,6 +168,25 @@ class StreamViewModel @Inject constructor(
         val minutes = (millis / (1000 * 60)) % 60
         val hours = millis / (1000 * 60 * 60)
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
+    fun onBackPressed() {
+        val isStreaming = streamState.value is StreamState.Streaming
+        val confirmationEnabled = streamConfirmationEnabled.value
+
+        if (isStreaming && confirmationEnabled) {
+            _uiState.update { it.copy(showNavigationDialog = true) }
+        }
+        // If not streaming or confirmation disabled, navigation will proceed (handled by UI)
+    }
+
+    fun confirmNavigation() {
+        stopStream()
+        _uiState.update { it.copy(showNavigationDialog = false) }
+    }
+
+    fun dismissNavigationDialog() {
+        _uiState.update { it.copy(showNavigationDialog = false) }
     }
 
     override fun onCleared() {

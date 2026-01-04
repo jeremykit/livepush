@@ -107,4 +107,30 @@
     <string name="stream_error">推流错误</string>
     <string name="reconnecting">正在重连...</string>
     <string name="reconnect_attempt">尝试 %1$d/%2$d</string>
+
+    <!-- Confirmation Dialogs -->
+    <string name="start_stream_confirm_title">开始推流</string>
+    <string name="start_stream_confirm_message">确定要开始推流吗？</string>
+    <string name="stop_stream_confirm_title">停止推流</string>
+    <string name="stop_stream_confirm_message">确定要停止推流吗？</string>
+    <string name="switch_camera_confirm_title">切换摄像头</string>
+    <string name="switch_camera_confirm_message">切换摄像头将暂时中断推流，确定继续吗？</string>
+    <string name="delete_history_confirm_title">删除记录</string>
+    <string name="delete_history_confirm_message">确定要删除这条历史记录吗？</string>
+    <string name="clear_all_history_confirm_title">清空历史</string>
+    <string name="clear_all_history_confirm_message">确定要清空所有历史记录吗？此操作不可撤销。</string>
+    <string name="network_change_warning_title">网络变化</string>
+    <string name="network_change_warning_message">检测到网络状态变化，推流可能会中断。</string>
+
+    <!-- Confirmation Settings -->
+    <string name="confirmation_settings">确认设置</string>
+    <string name="show_confirmations">显示确认对话框</string>
+    <string name="confirm_start_stream">开始推流时确认</string>
+    <string name="confirm_start_stream_summary">开始推流前显示确认对话框</string>
+    <string name="confirm_stop_stream">停止推流时确认</string>
+    <string name="confirm_stop_stream_summary">停止推流前显示确认对话框</string>
+    <string name="confirm_camera_switch">切换摄像头时确认</string>
+    <string name="confirm_camera_switch_summary">切换摄像头前显示确认对话框</string>
+    <string name="confirm_delete_history">删除历史时确认</string>
+    <string name="confirm_delete_history_summary">删除历史记录前显示确认对话框</string>
 </resources>
