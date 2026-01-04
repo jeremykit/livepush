@@ -1,15 +1,15 @@
 {
   "active": true,
-  "spec": "001-complete-settings-dialogs",
+  "spec": "002-automatic-network-reconnection",
   "state": "complete",
   "subtasks": {
-    "completed": 10,
-    "total": 10,
+    "completed": 11,
+    "total": 11,
     "in_progress": 0,
     "failed": 0
   },
   "phase": {
-    "current": "Integration & Verification",
+    "current": "Integration Testing",
     "id": null,
     "total": 1
   },
@@ -21,5 +21,5 @@
     "number": 12,
     "started_at": "2026-01-04T10:24:27.911589"
   },
-  "last_update": "2026-01-04T11:31:06.900459"
+  "last_update": "2026-01-04T14:23:49.536188"
 }
