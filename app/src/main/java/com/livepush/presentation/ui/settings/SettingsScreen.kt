@@ -63,6 +63,7 @@ fun SettingsScreen(
     var showReconnectAttemptsDialog by remember { mutableStateOf(false) }
     var showConnectionTimeoutDialog by remember { mutableStateOf(false) }
     var showKeyframeIntervalDialog by remember { mutableStateOf(false) }
+    var showLicensesDialog by remember { mutableStateOf(false) }
 
     // Resolution selection dialog
     if (showResolutionDialog) {
