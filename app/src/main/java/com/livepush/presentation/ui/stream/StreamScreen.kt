@@ -274,8 +274,8 @@ fun StreamScreen(
                             label = stringResource(R.string.flash),
                             isActive = uiState.isFlashOn,
                             onClick = { viewModel.toggleFlash() }
-)
-                        ControlButton(
+                        )
+ControlButton(
                             icon = if (uiState.isMuted) Icons.Default.MicOff else Icons.Default.Mic,
                             label = stringResource(R.string.mute),
                             isActive = uiState.isMuted,
@@ -406,11 +406,10 @@ private fun StatItem(
             style = MaterialTheme.typography.titleMedium,
             color = Color.White
         )
-        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.White.copy(alpha = 0.7f)
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.White.copy(alpha = 0.8f)
         )
     }
 }
@@ -424,27 +423,28 @@ private fun ControlButton(
     isActive: Boolean = false
 ) {
     Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
     ) {
         FilledIconButton(
             onClick = onClick,
             modifier = Modifier.size(48.dp),
             colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = if (isActive) LiveRed else MaterialTheme.colorScheme.secondary
+                containerColor = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                tint = Color.White
+                modifier = Modifier.size(24.dp),
+                tint = if (isActive) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = Color.White
+            color = Color.White,
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
