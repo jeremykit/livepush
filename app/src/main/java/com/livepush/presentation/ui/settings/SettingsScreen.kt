@@ -186,6 +186,13 @@ fun SettingsScreen(
         )
     }
 
+    // Open source licenses dialog
+    if (showLicensesDialog) {
+        LicensesDialog(
+            onDismiss = { showLicensesDialog = false }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
