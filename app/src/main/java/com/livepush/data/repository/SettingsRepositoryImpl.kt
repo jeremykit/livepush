@@ -41,6 +41,10 @@ class SettingsRepositoryImpl @Inject constructor(
         // Protocol
         val STREAM_PROTOCOL = stringPreferencesKey("stream_protocol")
 
+        // Network Settings
+        val MAX_RECONNECT_ATTEMPTS = intPreferencesKey("max_reconnect_attempts")
+        val CONNECTION_TIMEOUT = intPreferencesKey("connection_timeout")
+
         // Last URL
         val LAST_STREAM_URL = stringPreferencesKey("last_stream_url")
     }
@@ -95,6 +99,26 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun setLastStreamUrl(url: String) {
         dataStore.edit { prefs ->
             prefs[LAST_STREAM_URL] = url
+        }
+    }
+
+    override suspend fun getMaxReconnectAttempts(): Int {
+        return dataStore.data.first()[MAX_RECONNECT_ATTEMPTS] ?: 5
+    }
+
+    override suspend fun setMaxReconnectAttempts(attempts: Int) {
+        dataStore.edit { prefs ->
+            prefs[MAX_RECONNECT_ATTEMPTS] = attempts
+        }
+    }
+
+    override suspend fun getConnectionTimeout(): Int {
+        return dataStore.data.first()[CONNECTION_TIMEOUT] ?: 10
+    }
+
+    override suspend fun setConnectionTimeout(timeout: Int) {
+        dataStore.edit { prefs ->
+            prefs[CONNECTION_TIMEOUT] = timeout
         }
     }
 }
