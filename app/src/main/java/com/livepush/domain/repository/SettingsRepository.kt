@@ -8,4 +8,10 @@ interface SettingsRepository {
     suspend fun updateStreamConfig(config: StreamConfig)
     suspend fun getLastStreamUrl(): String?
     suspend fun setLastStreamUrl(url: String)
+
+    // Network settings
+    suspend fun getMaxReconnectAttempts(): Int
+    suspend fun setMaxReconnectAttempts(attempts: Int)
+    suspend fun getConnectionTimeout(): Int
+    suspend fun setConnectionTimeout(timeout: Int)
 }

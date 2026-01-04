@@ -43,6 +43,20 @@ class SettingsViewModel @Inject constructor(
             initialValue = StreamConfig()
         )
 
+    init {
+        // Load network settings from DataStore
+        viewModelScope.launch {
+            val maxAttempts = settingsRepository.getMaxReconnectAttempts()
+            val timeout = settingsRepository.getConnectionTimeout()
+            _uiState.update {
+                it.copy(
+                    maxReconnectAttempts = maxAttempts,
+                    connectionTimeout = timeout
+                )
+            }
+        }
+    }
+
     fun updateVideoConfig(videoConfig: VideoConfig) {
         viewModelScope.launch {
             val currentConfig = streamConfig.value
@@ -108,12 +122,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun updateKeyframeInterval(interval: Int) {
+    fun updateKeyFrameInterval(interval: Int) {
         viewModelScope.launch {
             val currentConfig = streamConfig.value
             settingsRepository.updateStreamConfig(
                 currentConfig.copy(
-                    videoConfig = currentConfig.videoConfig.copy(keyframeInterval = interval)
+                    videoConfig = currentConfig.videoConfig.copy(keyFrameInterval = interval)
                 )
             )
         }
@@ -146,7 +160,7 @@ class SettingsViewModel @Inject constructor(
             val currentConfig = streamConfig.value
             settingsRepository.updateStreamConfig(
                 currentConfig.copy(
-                    audioConfig = currentConfig.audioConfig.copy(channels = channels)
+                    audioConfig = currentConfig.audioConfig.copy(channelCount = channels)
                 )
             )
         }
@@ -157,11 +171,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun updateMaxReconnectAttempts(attempts: Int) {
-        _uiState.update { it.copy(maxReconnectAttempts = attempts) }
+        viewModelScope.launch {
+            settingsRepository.setMaxReconnectAttempts(attempts)
+            _uiState.update { it.copy(maxReconnectAttempts = attempts) }
+        }
     }
 
     fun updateConnectionTimeout(timeout: Int) {
-        _uiState.update { it.copy(connectionTimeout = timeout) }
+        viewModelScope.launch {
+            settingsRepository.setConnectionTimeout(timeout)
+            _uiState.update { it.copy(connectionTimeout = timeout) }
+        }
     }
 
     fun updateHardwareEncoder(enabled: Boolean) {

@@ -101,4 +101,24 @@ class SettingsRepositoryImpl @Inject constructor(
             prefs[LAST_STREAM_URL] = url
         }
     }
+
+    override suspend fun getMaxReconnectAttempts(): Int {
+        return dataStore.data.first()[MAX_RECONNECT_ATTEMPTS] ?: 5
+    }
+
+    override suspend fun setMaxReconnectAttempts(attempts: Int) {
+        dataStore.edit { prefs ->
+            prefs[MAX_RECONNECT_ATTEMPTS] = attempts
+        }
+    }
+
+    override suspend fun getConnectionTimeout(): Int {
+        return dataStore.data.first()[CONNECTION_TIMEOUT] ?: 10
+    }
+
+    override suspend fun setConnectionTimeout(timeout: Int) {
+        dataStore.edit { prefs ->
+            prefs[CONNECTION_TIMEOUT] = timeout
+        }
+    }
 }
