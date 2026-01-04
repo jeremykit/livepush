@@ -340,7 +340,7 @@ fun SettingsScreen(
             item {
                 SettingsItem(
                     title = stringResource(R.string.open_source_licenses),
-                    onClick = { /* TODO: 显示开源许可 */ }
+                    onClick = { showLicensesDialog = true }
                 )
             }
 
