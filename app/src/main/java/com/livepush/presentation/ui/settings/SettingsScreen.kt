@@ -60,6 +60,8 @@ fun SettingsScreen(
     var showSampleRateDialog by remember { mutableStateOf(false) }
     var showAudioBitrateDialog by remember { mutableStateOf(false) }
     var showChannelsDialog by remember { mutableStateOf(false) }
+    var showReconnectAttemptsDialog by remember { mutableStateOf(false) }
+    var showConnectionTimeoutDialog by remember { mutableStateOf(false) }
 
     // Resolution selection dialog
     if (showResolutionDialog) {
@@ -142,6 +144,30 @@ fun SettingsScreen(
             onConfirm = { channels ->
                 viewModel.updateChannelCount(channels)
                 showChannelsDialog = false
+            }
+        )
+    }
+
+    // Reconnect attempts selection dialog
+    if (showReconnectAttemptsDialog) {
+        ReconnectAttemptsDialog(
+            currentAttempts = uiState.maxReconnectAttempts,
+            onDismiss = { showReconnectAttemptsDialog = false },
+            onConfirm = { attempts ->
+                viewModel.updateMaxReconnectAttempts(attempts)
+                showReconnectAttemptsDialog = false
+            }
+        )
+    }
+
+    // Connection timeout selection dialog
+    if (showConnectionTimeoutDialog) {
+        ConnectionTimeoutDialog(
+            currentTimeout = uiState.connectionTimeout,
+            onDismiss = { showConnectionTimeoutDialog = false },
+            onConfirm = { timeout ->
+                viewModel.updateConnectionTimeout(timeout)
+                showConnectionTimeoutDialog = false
             }
         )
     }
@@ -242,14 +268,14 @@ fun SettingsScreen(
                 SettingsItem(
                     title = stringResource(R.string.max_reconnect_attempts),
                     value = "${uiState.maxReconnectAttempts}",
-                    onClick = { /* TODO: 显示重连次数选择对话框 */ }
+                    onClick = { showReconnectAttemptsDialog = true }
                 )
             }
             item {
                 SettingsItem(
                     title = stringResource(R.string.connection_timeout),
                     value = "${uiState.connectionTimeout}s",
-                    onClick = { /* TODO: 显示超时设置对话框 */ }
+                    onClick = { showConnectionTimeoutDialog = true }
                 )
             }
 
@@ -785,6 +811,128 @@ private fun ChannelsDialog(
         confirmButton = {
             TextButton(
                 onClick = { onConfirm(selectedChannelCount) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun ReconnectAttemptsDialog(
+    currentAttempts: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val attemptOptions = listOf(
+        1 to "1",
+        3 to "3",
+        5 to "5",
+        10 to "10",
+        -1 to stringResource(R.string.unlimited)
+    )
+
+    var selectedAttempts by remember { mutableStateOf(currentAttempts) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_reconnect_attempts)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                attemptOptions.forEach { (attempts, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (attempts == selectedAttempts),
+                                onClick = { selectedAttempts = attempts },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (attempts == selectedAttempts),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedAttempts) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun ConnectionTimeoutDialog(
+    currentTimeout: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val timeoutOptions = listOf(
+        5 to "5s",
+        10 to "10s",
+        15 to "15s",
+        30 to "30s",
+        60 to "60s"
+    )
+
+    var selectedTimeout by remember { mutableStateOf(currentTimeout) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_connection_timeout)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                timeoutOptions.forEach { (timeout, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (timeout == selectedTimeout),
+                                onClick = { selectedTimeout = timeout },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (timeout == selectedTimeout),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedTimeout) }
             ) {
                 Text(stringResource(R.string.confirm))
             }
