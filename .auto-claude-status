@@ -3,9 +3,9 @@
   "spec": "001-complete-settings-dialogs",
   "state": "building",
   "subtasks": {
-    "completed": 7,
+    "completed": 8,
     "total": 10,
-    "in_progress": 0,
+    "in_progress": 1,
     "failed": 0
   },
   "phase": {
@@ -19,7 +19,7 @@
   },
   "session": {
     "number": 9,
-    "started_at": "2026-01-04T10:24:27.911589"
+    "started_at": "2026-01-04T10:34:26.184736"
   },
-  "last_update": "2026-01-04T11:09:39.269358"
+  "last_update": "2026-01-04T11:10:49.566376"
 }
