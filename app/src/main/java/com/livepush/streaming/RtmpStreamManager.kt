@@ -161,6 +161,13 @@ class RtmpStreamManager @Inject constructor(
         reconnectionAttempt = 0
     }
 
+    override fun cancelReconnection() {
+        reconnectionJob?.cancel()
+        reconnectionAttempt = 0
+        _streamState.value = StreamState.Previewing
+        Timber.d("Reconnection cancelled by user")
+    }
+
     // ConnectChecker callbacks
     override fun onConnectionStarted(url: String) {
         Timber.d("Connection started: $url")
@@ -234,12 +241,12 @@ class RtmpStreamManager @Inject constructor(
 
         reconnectionJob?.cancel()
         reconnectionJob = scope.launch {
-            while (isActive && reconnectionAttempt < MAX_RECONNECTION_ATTEMPTS) {
+            while (isActive && reconnectionAttempt < currentConfig.reconnectionConfig.maxRetries) {
                 reconnectionAttempt++
                 val delaySeconds = calculateBackoffDelay(reconnectionAttempt)
 
-                Timber.d("Reconnection attempt $reconnectionAttempt/${MAX_RECONNECTION_ATTEMPTS} in ${delaySeconds}s")
-                _streamState.value = StreamState.Reconnecting(reconnectionAttempt, delaySeconds)
+                Timber.d("Reconnection attempt $reconnectionAttempt/${currentConfig.reconnectionConfig.maxRetries} in ${delaySeconds}s")
+                _streamState.value = StreamState.Reconnecting(reconnectionAttempt, currentConfig.reconnectionConfig.maxRetries)
 
                 delay(delaySeconds * 1000L)
 
@@ -254,7 +261,7 @@ class RtmpStreamManager @Inject constructor(
                     rtmpCamera?.startStream(url)
                 } catch (e: Exception) {
                     Timber.e(e, "Reconnection attempt failed")
-                    if (reconnectionAttempt >= MAX_RECONNECTION_ATTEMPTS) {
+                    if (reconnectionAttempt >= currentConfig.reconnectionConfig.maxRetries) {
                         _streamState.value = StreamState.Error(
                             StreamError.ConnectionFailed("Max reconnection attempts reached")
                         )

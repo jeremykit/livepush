@@ -303,7 +303,7 @@ fun StreamScreen(
                                 )
                             }
                             TextButton(
-                                onClick = { viewModel.stopStream() }
+                                onClick = { viewModel.cancelReconnection() }
                             ) {
                                 Text(
                                     text = stringResource(R.string.cancel),
