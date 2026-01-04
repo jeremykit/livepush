@@ -92,4 +92,6 @@
     <!-- Stream Screen -->
     <string name="stop_stream_confirm">确定要停止推流吗？</string>
     <string name="stream_error">推流错误</string>
+    <string name="reconnecting">正在重连...</string>
+    <string name="reconnect_attempt">尝试 %1$d/%2$d</string>
 </resources>

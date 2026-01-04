@@ -267,6 +267,53 @@ fun StreamScreen(
                     }
                 }
 
+                // 重连状态显示
+                if (streamState is StreamState.Reconnecting) {
+                    Surface(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 16.dp)
+                            .padding(horizontal = 16.dp),
+                        color = Color(0xFFFF9800),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.reconnecting),
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    text = stringResource(
+                                        R.string.reconnect_attempt,
+                                        (streamState as StreamState.Reconnecting).attempt,
+                                        streamState.maxAttempts
+                                    ),
+                                    color = Color.White.copy(alpha = 0.9f),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                            TextButton(
+                                onClick = { viewModel.stopStream() }
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.cancel),
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
+
                 // 错误状态显示
                 if (streamState is StreamState.Error) {
                     Surface(
