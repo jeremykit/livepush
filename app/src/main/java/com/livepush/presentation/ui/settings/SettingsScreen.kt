@@ -62,6 +62,7 @@ fun SettingsScreen(
     var showChannelsDialog by remember { mutableStateOf(false) }
     var showReconnectAttemptsDialog by remember { mutableStateOf(false) }
     var showConnectionTimeoutDialog by remember { mutableStateOf(false) }
+    var showKeyframeIntervalDialog by remember { mutableStateOf(false) }
 
     // Resolution selection dialog
     if (showResolutionDialog) {
@@ -142,7 +143,7 @@ fun SettingsScreen(
             currentChannelCount = streamConfig.audioConfig.channelCount,
             onDismiss = { showChannelsDialog = false },
             onConfirm = { channels ->
-                viewModel.updateChannelCount(channels)
+                viewModel.updateChannels(channels)
                 showChannelsDialog = false
             }
         )
@@ -168,6 +169,18 @@ fun SettingsScreen(
             onConfirm = { timeout ->
                 viewModel.updateConnectionTimeout(timeout)
                 showConnectionTimeoutDialog = false
+            }
+        )
+    }
+
+    // Keyframe interval selection dialog
+    if (showKeyframeIntervalDialog) {
+        KeyframeIntervalDialog(
+            currentInterval = streamConfig.videoConfig.keyFrameInterval,
+            onDismiss = { showKeyframeIntervalDialog = false },
+            onConfirm = { interval ->
+                viewModel.updateKeyFrameInterval(interval)
+                showKeyframeIntervalDialog = false
             }
         )
     }

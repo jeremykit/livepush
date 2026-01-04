@@ -58,6 +58,11 @@
     <string name="auto_reconnect">自动重连</string>
     <string name="max_reconnect_attempts">最大重连次数</string>
     <string name="connection_timeout">连接超时</string>
+    <string name="select_reconnect_attempts">选择最大重连次数</string>
+    <string name="select_connection_timeout">选择连接超时</string>
+    <string name="reconnect_attempts_format">%d 次</string>
+    <string name="connection_timeout_format">%d 秒</string>
+    <string name="unlimited">无限制</string>
 
     <string name="advanced_settings">高级设置</string>
     <string name="hardware_encoder">硬件编码</string>
