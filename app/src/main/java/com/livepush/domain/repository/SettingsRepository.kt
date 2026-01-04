@@ -11,4 +11,10 @@ interface SettingsRepository {
     suspend fun setLastStreamUrl(url: String)
     fun getReconnectionConfig(): Flow<ReconnectionConfig>
     suspend fun updateReconnectionConfig(config: ReconnectionConfig)
+
+    // Network settings
+    suspend fun getMaxReconnectAttempts(): Int
+    suspend fun setMaxReconnectAttempts(attempts: Int)
+    suspend fun getConnectionTimeout(): Int
+    suspend fun setConnectionTimeout(timeout: Int)
 }

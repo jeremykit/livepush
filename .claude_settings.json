@@ -19,6 +19,14 @@
       "Read(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection\\.auto-claude\\specs\\002-automatic-network-reconnection/**)",
       "Write(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection\\.auto-claude\\specs\\002-automatic-network-reconnection/**)",
       "Edit(E:\\237\\live\\livepush\\.worktrees\\002-automatic-network-reconnection\\.auto-claude\\specs\\002-automatic-network-reconnection/**)",
+      "Read(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs/**)",
+      "Write(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs/**)",
+      "Edit(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs/**)",
+      "Glob(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs/**)",
+      "Grep(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs/**)",
+      "Read(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs\\.auto-claude\\specs\\001-complete-settings-dialogs/**)",
+      "Write(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs\\.auto-claude\\specs\\001-complete-settings-dialogs/**)",
+      "Edit(E:\\237\\live\\livepush\\.worktrees\\001-complete-settings-dialogs\\.auto-claude\\specs\\001-complete-settings-dialogs/**)",
       "Bash(*)",
       "WebFetch(*)",
       "WebSearch(*)",
@@ -29,6 +37,7 @@
       "mcp__graphiti-memory__add_episode(*)",
       "mcp__graphiti-memory__get_episodes(*)",
       "mcp__graphiti-memory__get_entity_edge(*)"
+      "mcp__context7__get-library-docs(*)"
     ]
   }
 }
