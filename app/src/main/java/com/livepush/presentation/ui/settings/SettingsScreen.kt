@@ -314,7 +314,7 @@ fun SettingsScreen(
                 SettingsItem(
                     title = stringResource(R.string.keyframe_interval),
                     value = "${streamConfig.videoConfig.keyFrameInterval}s",
-                    onClick = { /* TODO: 显示关键帧间隔设置对话框 */ }
+                    onClick = { showKeyframeIntervalDialog = true }
                 )
             }
 
@@ -946,6 +946,67 @@ private fun ConnectionTimeoutDialog(
         confirmButton = {
             TextButton(
                 onClick = { onConfirm(selectedTimeout) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun KeyframeIntervalDialog(
+    currentInterval: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val intervalOptions = listOf(
+        1 to "1s",
+        2 to "2s",
+        3 to "3s",
+        4 to "4s",
+        5 to "5s"
+    )
+
+    var selectedInterval by remember { mutableStateOf(currentInterval) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_keyframe_interval)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                intervalOptions.forEach { (interval, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (interval == selectedInterval),
+                                onClick = { selectedInterval = interval },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (interval == selectedInterval),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedInterval) }
             ) {
                 Text(stringResource(R.string.confirm))
             }
