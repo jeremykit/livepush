@@ -41,6 +41,7 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val streamConfig by viewModel.streamConfig.collectAsStateWithLifecycle()
+    val streamConfirmationEnabled by viewModel.streamConfirmationEnabled.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -165,6 +166,13 @@ fun SettingsScreen(
                     title = stringResource(R.string.noise_reduction),
                     checked = uiState.noiseReduction,
                     onCheckedChange = { viewModel.updateNoiseReduction(it) }
+                )
+            }
+            item {
+                SettingsSwitchItem(
+                    title = stringResource(R.string.show_confirmations),
+                    checked = streamConfirmationEnabled,
+                    onCheckedChange = { viewModel.updateStreamConfirmationEnabled(it) }
                 )
             }
             item {
