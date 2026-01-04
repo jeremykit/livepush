@@ -160,6 +160,7 @@ class RtmpStreamManager @Inject constructor(
 
     override fun stopStream() {
         statsJob?.cancel()
+        audioHealthMonitor.stopMonitoring()
         rtmpCamera?.stopStream()
         _streamState.value = StreamState.Previewing
         _streamStats.value = StreamStats()
@@ -195,6 +196,7 @@ class RtmpStreamManager @Inject constructor(
         // Release audio managers
         audioCaptureManager.release()
         bufferReleaseManager.release()
+        audioHealthMonitor.release()
 
         rtmpCamera?.stopStream()
         rtmpCamera?.stopPreview()
@@ -211,6 +213,7 @@ class RtmpStreamManager @Inject constructor(
         Timber.d("Connection success")
         streamStartTime = System.currentTimeMillis()
         _streamState.value = StreamState.Streaming(streamStartTime)
+        audioHealthMonitor.startMonitoring()
         startStatsCollection()
     }
 
