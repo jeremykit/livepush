@@ -44,6 +44,9 @@ class SettingsRepositoryImpl @Inject constructor(
 
         // Last URL
         val LAST_STREAM_URL = stringPreferencesKey("last_stream_url")
+
+        // Stream Confirmation
+        val STREAM_CONFIRMATION_ENABLED = booleanPreferencesKey("stream_confirmation_enabled")
     }
 
     override fun getStreamConfig(): Flow<StreamConfig> {
@@ -96,6 +99,18 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun setLastStreamUrl(url: String) {
         dataStore.edit { prefs ->
             prefs[LAST_STREAM_URL] = url
+        }
+    }
+
+    override fun getStreamConfirmationEnabled(): Flow<Boolean> {
+        return dataStore.data.map { prefs ->
+            prefs[STREAM_CONFIRMATION_ENABLED] ?: true
+        }
+    }
+
+    override suspend fun setStreamConfirmationEnabled(enabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[STREAM_CONFIRMATION_ENABLED] = enabled
         }
     }
 }
