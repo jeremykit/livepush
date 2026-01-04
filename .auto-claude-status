@@ -9,17 +9,17 @@
     "failed": 0
   },
   "phase": {
-    "current": "UI Layer - Reconnection Feedback",
-    "id": null,
-    "total": 2
+    "current": "",
+    "id": 0,
+    "total": 0
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 19,
-    "started_at": "2026-01-04T11:04:26.122676"
+    "number": 1,
+    "started_at": "2026-01-04T13:55:34.356371"
   },
-  "last_update": "2026-01-04T12:27:18.695893"
+  "last_update": "2026-01-04T13:55:35.040007"
 }
