@@ -46,6 +46,12 @@ class SettingsRepositoryImpl @Inject constructor(
         // Reconnection Settings
         val RECONNECTION_MAX_RETRIES = intPreferencesKey("reconnection_max_retries")
         val RECONNECTION_INITIAL_DELAY_MS = intPreferencesKey("reconnection_initial_delay_ms")
+<<<<<<< HEAD
+=======
+        // Network Settings
+        val MAX_RECONNECT_ATTEMPTS = intPreferencesKey("max_reconnect_attempts")
+        val CONNECTION_TIMEOUT = intPreferencesKey("connection_timeout")
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0
 
         // Last URL
         val LAST_STREAM_URL = stringPreferencesKey("last_stream_url")
@@ -115,6 +121,21 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
+<<<<<<< HEAD
+=======
+    override fun getStreamConfirmationEnabled(): Flow<Boolean> {
+        return dataStore.data.map { prefs ->
+            prefs[STREAM_CONFIRMATION_ENABLED] ?: true
+        }
+    }
+
+    override suspend fun setStreamConfirmationEnabled(enabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[STREAM_CONFIRMATION_ENABLED] = enabled
+        }
+    }
+    
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0
     override fun getReconnectionConfig(): Flow<ReconnectionConfig> {
         return dataStore.data.map { prefs ->
             ReconnectionConfig(
@@ -128,6 +149,7 @@ class SettingsRepositoryImpl @Inject constructor(
         dataStore.edit { prefs ->
             prefs[RECONNECTION_MAX_RETRIES] = config.maxRetries
             prefs[RECONNECTION_INITIAL_DELAY_MS] = config.initialDelayMs
+<<<<<<< HEAD
         }
     }
 
@@ -143,3 +165,29 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 }
+=======
+          }
+     }
+    
+    override suspend fun getMaxReconnectAttempts(): Int {
+        return dataStore.data.first()[MAX_RECONNECT_ATTEMPTS] ?: 5
+    }
+
+    override suspend fun setMaxReconnectAttempts(attempts: Int) {
+        dataStore.edit { prefs ->
+            prefs[MAX_RECONNECT_ATTEMPTS] = attempts
+        }
+    }
+
+    override suspend fun getConnectionTimeout(): Int {
+        return dataStore.data.first()[CONNECTION_TIMEOUT] ?: 10
+    }
+
+    override suspend fun setConnectionTimeout(timeout: Int) {
+        dataStore.edit { prefs ->
+            prefs[CONNECTION_TIMEOUT] = timeout
+        }
+    }
+   
+}
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0

@@ -336,4 +336,8 @@ class RtmpStreamManager @Inject constructor(
         private const val MAX_RECONNECTION_DELAY = 30 // seconds
         private const val MAX_RECONNECTION_ATTEMPTS = 10
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0

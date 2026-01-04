@@ -42,4 +42,8 @@ data class AudioHealthMetrics(
     val sampleRate: Int = 44100,
     val encodingLatency: Long = 0,
     val timestamp: Long = System.currentTimeMillis()
+<<<<<<< HEAD
 )
+=======
+)
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0

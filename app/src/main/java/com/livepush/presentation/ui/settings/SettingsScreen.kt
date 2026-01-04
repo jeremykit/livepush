@@ -429,4 +429,715 @@ private fun SettingsSwitchItem(
         },
         modifier = modifier
     )
+<<<<<<< HEAD
 }
+=======
+}
+
+@Composable
+private fun ResolutionDialog(
+    currentWidth: Int,
+    currentHeight: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int, Int) -> Unit
+) {
+    val resolutions = listOf(
+        Pair(640, 360) to "640 × 360 (360p)",
+        Pair(854, 480) to "854 × 480 (480p)",
+        Pair(1280, 720) to "1280 × 720 (720p)",
+        Pair(1920, 1080) to "1920 × 1080 (1080p)"
+    )
+
+    var selectedResolution by remember {
+        mutableStateOf(Pair(currentWidth, currentHeight))
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_resolution)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                resolutions.forEach { (resolution, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (resolution == selectedResolution),
+                                onClick = { selectedResolution = resolution },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (resolution == selectedResolution),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirm(selectedResolution.first, selectedResolution.second)
+                }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun FrameRateDialog(
+    currentFps: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val frameRates = listOf(
+        15 to "15 fps",
+        24 to "24 fps",
+        30 to "30 fps",
+        60 to "60 fps"
+    )
+
+    var selectedFps by remember { mutableStateOf(currentFps) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_frame_rate)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                frameRates.forEach { (fps, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (fps == selectedFps),
+                                onClick = { selectedFps = fps },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (fps == selectedFps),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedFps) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun BitrateDialog(
+    currentBitrate: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val bitrates = listOf(
+        500_000 to "500 Kbps",
+        1_000_000 to "1 Mbps",
+        2_000_000 to "2 Mbps",
+        4_000_000 to "4 Mbps",
+        6_000_000 to "6 Mbps",
+        8_000_000 to "8 Mbps"
+    )
+
+    var selectedBitrate by remember { mutableStateOf(currentBitrate) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_bitrate)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                bitrates.forEach { (bitrate, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (bitrate == selectedBitrate),
+                                onClick = { selectedBitrate = bitrate },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (bitrate == selectedBitrate),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedBitrate) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun EncoderDialog(
+    currentCodec: VideoCodec,
+    onDismiss: () -> Unit,
+    onConfirm: (VideoCodec) -> Unit
+) {
+    val codecs = VideoCodec.entries
+
+    var selectedCodec by remember { mutableStateOf(currentCodec) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_encoder)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                codecs.forEach { codec ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (codec == selectedCodec),
+                                onClick = { selectedCodec = codec },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (codec == selectedCodec),
+                            onClick = null
+                        )
+                        Text(
+                            text = codec.displayName,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedCodec) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun SampleRateDialog(
+    currentSampleRate: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val sampleRates = listOf(
+        22050 to "22050 Hz",
+        44100 to "44100 Hz",
+        48000 to "48000 Hz"
+    )
+
+    var selectedSampleRate by remember { mutableStateOf(currentSampleRate) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_sample_rate)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                sampleRates.forEach { (sampleRate, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (sampleRate == selectedSampleRate),
+                                onClick = { selectedSampleRate = sampleRate },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (sampleRate == selectedSampleRate),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedSampleRate) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun AudioBitrateDialog(
+    currentBitrate: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val bitrates = listOf(
+        64_000 to "64 Kbps",
+        96_000 to "96 Kbps",
+        128_000 to "128 Kbps",
+        192_000 to "192 Kbps",
+        256_000 to "256 Kbps",
+        320_000 to "320 Kbps"
+    )
+
+    var selectedBitrate by remember { mutableStateOf(currentBitrate) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_audio_bitrate)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                bitrates.forEach { (bitrate, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (bitrate == selectedBitrate),
+                                onClick = { selectedBitrate = bitrate },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (bitrate == selectedBitrate),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedBitrate) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun ChannelsDialog(
+    currentChannelCount: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val channels = listOf(
+        1 to stringResource(R.string.mono),
+        2 to stringResource(R.string.stereo)
+    )
+
+    var selectedChannelCount by remember { mutableStateOf(currentChannelCount) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_channels)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                channels.forEach { (count, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (count == selectedChannelCount),
+                                onClick = { selectedChannelCount = count },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (count == selectedChannelCount),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedChannelCount) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun ReconnectAttemptsDialog(
+    currentAttempts: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val attemptOptions = listOf(
+        1 to "1",
+        3 to "3",
+        5 to "5",
+        10 to "10",
+        -1 to stringResource(R.string.unlimited)
+    )
+
+    var selectedAttempts by remember { mutableStateOf(currentAttempts) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_reconnect_attempts)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                attemptOptions.forEach { (attempts, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (attempts == selectedAttempts),
+                                onClick = { selectedAttempts = attempts },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (attempts == selectedAttempts),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedAttempts) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun ConnectionTimeoutDialog(
+    currentTimeout: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val timeoutOptions = listOf(
+        5 to "5s",
+        10 to "10s",
+        15 to "15s",
+        30 to "30s",
+        60 to "60s"
+    )
+
+    var selectedTimeout by remember { mutableStateOf(currentTimeout) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_connection_timeout)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                timeoutOptions.forEach { (timeout, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (timeout == selectedTimeout),
+                                onClick = { selectedTimeout = timeout },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (timeout == selectedTimeout),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedTimeout) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun KeyframeIntervalDialog(
+    currentInterval: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit
+) {
+    val intervalOptions = listOf(
+        1 to "1s",
+        2 to "2s",
+        3 to "3s",
+        4 to "4s",
+        5 to "5s"
+    )
+
+    var selectedInterval by remember { mutableStateOf(currentInterval) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.select_keyframe_interval)) },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                intervalOptions.forEach { (interval, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (interval == selectedInterval),
+                                onClick = { selectedInterval = interval },
+                                role = Role.RadioButton
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (interval == selectedInterval),
+                            onClick = null
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(selectedInterval) }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun LicensesDialog(
+    onDismiss: () -> Unit
+) {
+    data class License(
+        val name: String,
+        val license: String,
+        val copyright: String
+    )
+
+    val licenses = listOf(
+        License(
+            name = "Android Jetpack Libraries",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "CameraX",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "Jetpack Compose",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "Material Design 3",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "Hilt",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Google Inc."
+        ),
+        License(
+            name = "Kotlin",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) JetBrains s.r.o."
+        ),
+        License(
+            name = "Kotlin Coroutines",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) JetBrains s.r.o."
+        ),
+        License(
+            name = "OkHttp",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Square, Inc."
+        ),
+        License(
+            name = "Retrofit",
+            license = "Apache License 2.0",
+            copyright = "Copyright (C) Square, Inc."
+        )
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.open_source_licenses)) },
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                licenses.forEach { license ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = license.name,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = license.copyright,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = license.license,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    if (license != licenses.last()) {
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.confirm))
+            }
+        }
+    )
+}
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0

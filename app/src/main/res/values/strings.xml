@@ -105,8 +105,11 @@
     <!-- Stream Screen -->
     <string name="stop_stream_confirm">确定要停止推流吗？</string>
     <string name="stream_error">推流错误</string>
+<<<<<<< HEAD
     <string name="reconnecting">正在重连...</string>
     <string name="reconnect_attempt">尝试 %1$d/%2$d</string>
+=======
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0
 
     <!-- Confirmation Dialogs -->
     <string name="start_stream_confirm_title">开始推流</string>
@@ -133,4 +136,10 @@
     <string name="confirm_camera_switch_summary">切换摄像头前显示确认对话框</string>
     <string name="confirm_delete_history">删除历史时确认</string>
     <string name="confirm_delete_history_summary">删除历史记录前显示确认对话框</string>
+<<<<<<< HEAD
 </resources>
+=======
+    <string name="reconnecting">正在重连...</string>
+    <string name="reconnect_attempt">尝试 %1$d/%2$d</string>
+</resources>
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0

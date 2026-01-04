@@ -50,7 +50,10 @@ class SettingsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = true
         )
+<<<<<<< HEAD
 
+=======
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0
     init {
         // Load network settings from DataStore
         viewModelScope.launch {
@@ -83,6 +86,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+<<<<<<< HEAD
+=======
+    fun updateStreamConfirmationEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setStreamConfirmationEnabled(enabled)
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0
     fun updateResolution(width: Int, height: Int) {
         viewModelScope.launch {
             val currentConfig = streamConfig.value
@@ -174,12 +183,15 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+<<<<<<< HEAD
     fun updateStreamConfirmationEnabled(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setStreamConfirmationEnabled(enabled)
         }
     }
 
+=======
+>>>>>>> c4059d0c7434ae92f1973b9b2be54d064fd3f4f0
     fun updateAutoReconnect(enabled: Boolean) {
         _uiState.update { it.copy(autoReconnect = enabled) }
     }
