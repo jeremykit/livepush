@@ -1,5 +1,6 @@
 package com.livepush.presentation.ui.stream
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -69,6 +70,7 @@ fun StreamScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val streamState by viewModel.streamState.collectAsStateWithLifecycle()
     val streamStats by viewModel.streamStats.collectAsStateWithLifecycle()
+    val streamConfirmationEnabled by viewModel.streamConfirmationEnabled.collectAsStateWithLifecycle()
 
     var showStopDialog by remember { mutableStateOf(false) }
 
@@ -78,6 +80,44 @@ fun StreamScreen(
     // 设置推流地址
     LaunchedEffect(streamUrl) {
         viewModel.setStreamUrl(streamUrl)
+    }
+
+    // 处理系统返回按钮
+    BackHandler(enabled = true) {
+        if (isStreaming && streamConfirmationEnabled) {
+            viewModel.onBackPressed()
+        } else if (isStreaming) {
+            // Confirmation disabled, stop stream and navigate back
+            viewModel.stopStream()
+            onNavigateBack()
+        } else {
+            // Not streaming, navigate back directly
+            onNavigateBack()
+        }
+    }
+
+    // 导航确认对话框
+    if (uiState.showNavigationDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissNavigationDialog() },
+            title = { Text(stringResource(R.string.confirm)) },
+            text = { Text(stringResource(R.string.stop_stream_confirm)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.confirmNavigation()
+                        onNavigateBack()
+                    }
+                ) {
+                    Text(stringResource(R.string.confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissNavigationDialog() }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
     }
 
     // 停止确认对话框
@@ -137,8 +177,11 @@ fun StreamScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (isStreaming) {
-                            showStopDialog = true
+                        if (isStreaming && streamConfirmationEnabled) {
+                            viewModel.onBackPressed()
+                        } else if (isStreaming) {
+                            viewModel.stopStream()
+                            onNavigateBack()
                         } else {
                             onNavigateBack()
                         }
@@ -247,7 +290,11 @@ fun StreamScreen(
                         FilledIconButton(
                             onClick = {
                                 if (isStreaming) {
-                                    showStopDialog = true
+                                    if (streamConfirmationEnabled) {
+                                        showStopDialog = true
+                                    } else {
+                                        viewModel.stopStream()
+                                    }
                                 } else {
                                     viewModel.startStream()
                                 }

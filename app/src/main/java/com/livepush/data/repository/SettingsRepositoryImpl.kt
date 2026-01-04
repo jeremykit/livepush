@@ -2,6 +2,7 @@ package com.livepush.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -51,6 +52,9 @@ class SettingsRepositoryImpl @Inject constructor(
 
         // Last URL
         val LAST_STREAM_URL = stringPreferencesKey("last_stream_url")
+
+        // Stream Confirmation
+        val STREAM_CONFIRMATION_ENABLED = booleanPreferencesKey("stream_confirmation_enabled")
     }
 
     override fun getStreamConfig(): Flow<StreamConfig> {
@@ -114,6 +118,18 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getStreamConfirmationEnabled(): Flow<Boolean> {
+        return dataStore.data.map { prefs ->
+            prefs[STREAM_CONFIRMATION_ENABLED] ?: true
+        }
+    }
+
+    override suspend fun setStreamConfirmationEnabled(enabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[STREAM_CONFIRMATION_ENABLED] = enabled
+        }
+    }
+    
     override fun getReconnectionConfig(): Flow<ReconnectionConfig> {
         return dataStore.data.map { prefs ->
             ReconnectionConfig(
@@ -127,6 +143,9 @@ class SettingsRepositoryImpl @Inject constructor(
         dataStore.edit { prefs ->
             prefs[RECONNECTION_MAX_RETRIES] = config.maxRetries
             prefs[RECONNECTION_INITIAL_DELAY_MS] = config.initialDelayMs
+          }
+     }
+    
     override suspend fun getMaxReconnectAttempts(): Int {
         return dataStore.data.first()[MAX_RECONNECT_ATTEMPTS] ?: 5
     }
@@ -146,4 +165,5 @@ class SettingsRepositoryImpl @Inject constructor(
             prefs[CONNECTION_TIMEOUT] = timeout
         }
     }
+   
 }

@@ -43,6 +43,13 @@ class SettingsViewModel @Inject constructor(
             initialValue = StreamConfig()
         )
 
+    val streamConfirmationEnabled: StateFlow<Boolean> = settingsRepository
+        .getStreamConfirmationEnabled()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = true
+        )
     init {
         // Load network settings from DataStore
         viewModelScope.launch {
@@ -75,6 +82,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun updateStreamConfirmationEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setStreamConfirmationEnabled(enabled)
     fun updateResolution(width: Int, height: Int) {
         viewModelScope.launch {
             val currentConfig = streamConfig.value
